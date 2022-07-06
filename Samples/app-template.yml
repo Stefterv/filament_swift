@@ -1,0 +1,23 @@
+configs:
+  Debug: debug
+  Release: release
+
+targetTemplates:
+  FilamentApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: ${target_name}/${target_name}
+      - path: ${target_name}/Materials
+        buildPhase: none
+        optional: true
+    dependencies:
+      - package: Filament
+    settings:
+      base:
+        # This allows users to not have to specify a unique bundle ID when building the sample apps.
+        SAMPLE_CODE_DISAMBIGUATOR: ${DEVELOPMENT_TEAM}
+packages:
+  Filament:
+    path: ../../../../

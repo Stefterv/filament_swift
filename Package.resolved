@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "filament",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Stefterv/filament",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c6bf5a332679866962b9ff380f41e90032449d16"
+      }
+    }
+  ],
+  "version" : 2
+}
