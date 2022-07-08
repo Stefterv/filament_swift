@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Stefterv/filament",
       "state" : {
-        "branch" : "swift_pm",
-        "revision" : "14da11a2fc1b94a53ddc785174e1671363ff35f8"
+        "revision" : "bdbd0d62c1e6b3352fb757a8d5048c4e8581166d",
+        "version" : "1.25.0"
       }
     }
   ],

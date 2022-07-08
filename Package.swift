@@ -6,15 +6,12 @@ import PackageDescription
 let package = Package(
     name: "filament_swift",
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Filament",
             targets: ["Filament"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/Stefterv/filament", branch: "swift_pm")
+        .package(url: "https://github.com/Stefterv/filament", exact: "1.25.0")
     ],
     targets: [
         .target(
