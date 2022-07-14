@@ -13,7 +13,7 @@
 
 @property (nonatomic, readonly, nonnull) void* sampler  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
 - (nonnull id) init: (nonnull void*) sampler NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
-- (nonnull id) init NS_UNAVAILABLE;
+- (nonnull id) init;
 
 @end
 

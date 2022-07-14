@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "Texture.h"
+#import "TextureSampler.h"
 
 #import <simd/simd.h>
 
@@ -44,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setParameterBool4: (NSString*) name :(bool) boolean1 :(bool) boolean2 :(bool) boolean3 :(bool) boolean4;
 - (void) setParameterFloat4: (NSString*) name :(simd_float4) vector;
 - (void) setParameterInt4: (NSString*) name :(simd_int4) vector;
-- (void) setParameterTexture: (NSString*) name :(Texture*) texture;
+- (void) setParameterTexture: (NSString*) name :(Texture*) texture :(TextureSampler*) sampler;
 /**
  * Set up a custom scissor rectangle; by default this encompasses the View.
  *
