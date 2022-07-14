@@ -19,6 +19,7 @@
 }
 - (instancetype)payload:(NSData *)buffer{
     nativeBuilder->package(buffer.bytes, buffer.length);
+    return self;
 }
 - (Material*)build:(Engine *)engine{
     auto nEngine = (filament::Engine*) engine.engine;
