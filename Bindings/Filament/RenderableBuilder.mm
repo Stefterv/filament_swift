@@ -1,7 +1,6 @@
 //
 //  RenderableBuilder.mm
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 30.06.22.
 //
 #import "Bindings/Filament/RenderableBuilder.h"
@@ -20,7 +19,6 @@
 }
 
 - (instancetype)geometry:(int)index :(PrimitiveType)type :(VertexBuffer *)vertices :(IndexBuffer *)indices :(int)offset :(int)count{
-#warning Rebuild sending geometry to filament
     nativeBuilder->geometry(index,(filament::RenderableManager::PrimitiveType) type, (filament::VertexBuffer*)vertices.buffer, (filament::IndexBuffer*)indices.buffer, offset, count);
     return self;
 }

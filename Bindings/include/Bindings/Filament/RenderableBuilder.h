@@ -1,7 +1,6 @@
 //
 //  RenderableBuilder.h
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 30.06.22.
 //
 #import <Foundation/Foundation.h>
@@ -173,7 +172,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param enabled If true, enables buffer object mode.  False by default.
  */
 - (instancetype) enableSkinningBuffers: (bool) enabled;
-
 // TODO: Skinning & Morphing functions
 
 - (instancetype) build: (Engine*) engine :(Entity) entity;

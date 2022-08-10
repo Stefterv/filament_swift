@@ -1,7 +1,6 @@
 //
 //  Ktx1Loader.mm
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 05.07.22.
 //
 #import "Bindings/Utils/Ktx1Loader.h"

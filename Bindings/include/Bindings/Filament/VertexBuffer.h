@@ -1,6 +1,5 @@
 //
 //  VertexBuffer.h
-//  swift-gltf-viewer
 //
 //  Created by Stef Tervelde on 30.06.22.
 //
@@ -9,13 +8,16 @@
 #ifndef VertexBuffer_h
 #define VertexBuffer_h
 
-
+@class Engine;
 
 @interface VertexBuffer : NSObject
 
 @property (nonatomic, readonly, nonnull) void* buffer  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
 - (nonnull id) init: (nonnull void*) buffer NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
 - (nonnull id) init NS_UNAVAILABLE;
+- (int) getVertexCount;
+- (void) setBufferAt: (nonnull Engine*) engine :(int) bufferIndex :(nonnull NSData*) data :(int) byteOffset;
+- (void) setBufferAt: (nonnull Engine*) engine :(int) bufferIndex :(nonnull NSData*) data;
 
 @end
 

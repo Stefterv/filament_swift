@@ -1,7 +1,6 @@
 //
 //  NameComponentManager.mm
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 01.07.22.
 //
 #import "Bindings/Utils/NameComponentManager.h"

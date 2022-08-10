@@ -1,7 +1,6 @@
 //
 //  MaterialProvider.h
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 30.06.22.
 //
 #import <Foundation/Foundation.h>
@@ -12,8 +11,7 @@
 #ifndef MaterialProvider_h
 #define MaterialProvider_h
 
-
-//NS_SWIFT_NAME(MaterialProvider.AlphaMode)
+NS_SWIFT_NAME(MaterialProvider.AlphaMode)
 //typedef NS_ENUM(NSInteger, AlphaMode) {
 //    OPAQUE,
 //    MASK,

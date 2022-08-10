@@ -1,7 +1,6 @@
 //
 //  Ktx1Loader.h
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 05.07.22.
 //
 #import <Foundation/Foundation.h>

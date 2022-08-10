@@ -1,7 +1,6 @@
 //
 //  RenderTargetBuilder.mm
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 05.07.22.
 //
 #import "Bindings/Filament/RenderTargetBuilder.h"

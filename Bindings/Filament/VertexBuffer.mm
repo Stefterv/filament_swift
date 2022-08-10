@@ -1,6 +1,5 @@
 //
 //  VertexBuffer.mm
-//  swift-gltf-viewer
 //
 //  Created by Stef Tervelde on 30.06.22.
 //
@@ -16,5 +15,5 @@
     self->nativeBuffer = (filament::VertexBuffer*)buffer;
     return self;
 }
-#warning delete
+
 @end

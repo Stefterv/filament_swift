@@ -1,7 +1,6 @@
 //
 //  NameComponentManager.h
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 01.07.22.
 //
 #import <Foundation/Foundation.h>

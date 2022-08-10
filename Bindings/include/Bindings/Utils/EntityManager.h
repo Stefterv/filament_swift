@@ -1,7 +1,6 @@
 //
 //  EntityManager.h
-//  swift-gltf-viewer
-//
+
 //  Created by Stef Tervelde on 29.06.22.
 //
 
