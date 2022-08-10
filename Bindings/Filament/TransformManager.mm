@@ -46,6 +46,11 @@
     nativeManager->destroy(utils::Entity::import(entity));
 }
 
+- (Entity)getParent:(Entity)entity{
+    auto parent = nativeManager->getParent([self getInstance:entity]);
+    return utils::Entity::smuggle(parent);
+}
+
 - (void)setParent:(EntityInstance)instance :(EntityInstance)parent{
     nativeManager->setParent(instance, parent);
 }

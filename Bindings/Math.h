@@ -14,7 +14,6 @@
 
 
 
-
 #define FLOAT3_FROM_SIMD(m) (filament::math::float3(m[0],m[1],m[2]))
 #define FLOAT4_FROM_SIMD(m) (filament::math::float4(m[0],m[1],m[2], m[3]))
 #define FLOAT3X9_FROM_SIMD(m) (filament::math::float3[]){ \

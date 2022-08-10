@@ -13,10 +13,6 @@
 #ifndef ColorGradingBuilder_h
 #define ColorGradingBuilder_h
 
-@interface ToneMapping
-
-@end
-
 @interface ColorGradingBuilder : NSObject
 
 @property (nonatomic, readonly, nonnull) void* builder  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
@@ -75,19 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @return This Builder, for chaining calls
  */
 - (instancetype) toneMapper: (ToneMapper*) toneMapper;
-/**
- * Selects the tone mapping operator to apply to the HDR color buffer as the last
- * operation of the color grading post-processing step.
- *
- * The default tone mapping operator is {@link ToneMapping#ACES_LEGACY}.
- *
- * @param toneMapping The tone mapping operator to apply to the HDR color buffer
- *
- * @return This Builder, for chaining calls
- *
- * @deprecated Use {@link #toneMapper(ToneMapper)}
- */
-- (instancetype) toneMapping: (ToneMapping*) toneMapping;
 /**
  * Enables or disables the luminance scaling component (LICH) from the exposure value
  * invariant luminance system (EVILS). When this setting is enabled, pixels with high
@@ -222,7 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @return This Builder, for chaining calls
  */
-- (instancetype) shadowsMidtonesHighlights: (simd_double4) shadows :(simd_double4) mittones :(simd_double4) highlights :(simd_double4) ranges;
+- (instancetype) shadowsMidtonesHighlights: (simd_double4) shadows :(simd_double4) midtones :(simd_double4) highlights :(simd_double4) ranges;
 /**
  * Applies a slope, offset, and power, as defined by the ASC CDL (American Society of
  * Cinematographers Color Decision List) to the image. The CDL can be used to adjust the

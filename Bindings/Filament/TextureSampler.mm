@@ -16,5 +16,8 @@
     self->nativeSampler = (filament::TextureSampler*)sampler;
     return self;
 }
+- (id)init{
+    return [self init: new filament::TextureSampler()];
+}
 
 @end

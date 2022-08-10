@@ -35,7 +35,6 @@ NS_SWIFT_NAME(Renderer.ClearOptions)
 @property CIColor*_Nonnull clearColor;
 @property bool clear;
 @property bool discard;
-- (nonnull id) init;
 @end
 
 
@@ -285,7 +284,7 @@ NS_SWIFT_NAME(Renderer.ClearOptions)
  * @exception BufferOverflowException if the specified parameters would result in reading
  * outside of <code>buffer</code>.
  */
-- (void) readPixels: (int) xoffset :(int) yoffset :(int) width :(int) height :(nonnull PixelBufferDescriptor*) buffer;
+- (void) readPixels: (int) xoffset :(int) yoffset :(int) width :(int) height :(nonnull NSData*) buffer;
 /**
  * Reads back the content of a specified {@link RenderTarget}.
  *
@@ -355,7 +354,7 @@ NS_SWIFT_NAME(Renderer.ClearOptions)
  * @exception BufferOverflowException if the specified parameters would result in reading
  * outside of <code>buffer</code>.
  */
-- (void) readPixels: (nonnull RenderTarget*) target :(int) xoffset :(int) yoffset :(int) width :(int) height :(nonnull PixelBufferDescriptor*) buffer;
+- (void) readPixels: (nonnull RenderTarget*) target :(int) xoffset :(int) yoffset :(int) width :(int) height :(nonnull NSData*) buffer;
 /**
  * Returns a timestamp (in seconds) for the last call to {@link #beginFrame}. This value is
  * constant for all {@link View views} rendered during a frame. The epoch is set with

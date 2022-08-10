@@ -16,5 +16,6 @@
     self->nativeBox = (filament::Box*)box;
     return self;
 }
+# warning Implement Box
 
 @end

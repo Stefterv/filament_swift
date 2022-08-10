@@ -264,10 +264,10 @@ NS_SWIFT_NAME(Texture.PixelBufferDescriptor)
 - (nonnull id) init: (nonnull void*) texture NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
 - (nonnull id) init NS_UNAVAILABLE;
 
-- (int) getWidth: (int) level;
-- (int) getHeight: (int) level;
-- (int) getDepth: (int) level;
-- (int) getLevels;
+- (unsigned long) getWidth: (int) level;
+- (unsigned long) getHeight: (int) level;
+- (unsigned long) getDepth: (int) level;
+- (unsigned long) getLevels;
 - (Sampler) getTarget;
 - (InternalFormat) getFormat;
 /**

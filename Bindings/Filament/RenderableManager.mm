@@ -18,6 +18,14 @@
     return self;
 }
 
+- (void)setAxisAlignedBoundingBox:(EntityInstance)instance :(Box *)aabb{
+# warning Figure out box
+}
+
+- (Box *)getAxisAlignedBoundingBox:(EntityInstance)instance{
+# warning Figure out box
+}
+
 - (void)setLayerMask:(EntityInstance)instance :(uint8_t)select :(uint8_t)value{
     nativeManager->setLayerMask(instance, select, value);
 }

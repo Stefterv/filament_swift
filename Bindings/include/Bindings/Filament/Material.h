@@ -204,7 +204,7 @@ NS_SWIFT_NAME(Material.Parameter)
 - (double) getRequiredAttributes;
 - (double) getParameterCount;
 NS_ASSUME_NONNULL_BEGIN
-- (NSArray<Parameter*>*) getParamters;
+- (NSArray<Parameter*>*) getParameters;
 - (bool) hasParameter: (NSString*) name;
 - (void) setDefaultParameterBool: (NSString*) name :(bool) boolean;
 - (void) setDefaultParameterFloat: (NSString*) name :(float) decimal;
@@ -218,7 +218,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setDefaultParameterBool4: (NSString*) name :(bool) boolean1 :(bool) boolean2 :(bool) boolean3 :(bool) boolean4;
 - (void) setDefaultParameterFloat4: (NSString*) name :(simd_float4) vector;
 - (void) setDefaultParameterInt4: (NSString*) name :(simd_int4) vector;
-- (void) setDefaultParameterTexture: (NSString*) name :(Texture*) texture;
+- (void) setDefaultParameterTexture: (NSString*) name :(Texture*) texture :(TextureSampler*) sampler;;
 NS_ASSUME_NONNULL_END
 
 

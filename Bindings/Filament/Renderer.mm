@@ -75,6 +75,14 @@
 - (void)copyFrame:(SwapChain *)dstSwapChain :(Viewport *)dstViewport :(Viewport *)srcViewport :(int)flags{
     nativeRenderer->copyFrame( (filament::SwapChain*) dstSwapChain.swapchain, FILAMENT_VIEWPORT(dstViewport), FILAMENT_VIEWPORT(srcViewport));
 }
+- (void)readPixels:(int)xoffset :(int)yoffset :(int)width :(int)height :(NSData *)buffer{
+#warning Return Pixel data
+//    nativeRenderer->readPixels(<#uint32_t xoffset#>, <#uint32_t yoffset#>, <#uint32_t width#>, <#uint32_t height#>, <#backend::PixelBufferDescriptor &&buffer#>)
+}
+- (void)readPixels:(RenderTarget *)target :(int)xoffset :(int)yoffset :(int)width :(int)height :(NSData *)buffer{
+    
+}
+
 - (double)getUserTime{
     return nativeRenderer->getUserTime();
 }

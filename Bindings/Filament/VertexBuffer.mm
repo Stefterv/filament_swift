@@ -16,5 +16,5 @@
     self->nativeBuffer = (filament::VertexBuffer*)buffer;
     return self;
 }
-
+#warning delete
 @end

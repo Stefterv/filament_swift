@@ -20,6 +20,7 @@
 }
 
 - (instancetype)geometry:(int)index :(PrimitiveType)type :(VertexBuffer *)vertices :(IndexBuffer *)indices :(int)offset :(int)count{
+#warning Rebuild sending geometry to filament
     nativeBuilder->geometry(index,(filament::RenderableManager::PrimitiveType) type, (filament::VertexBuffer*)vertices.buffer, (filament::IndexBuffer*)indices.buffer, offset, count);
     return self;
 }
@@ -34,6 +35,10 @@
 - (instancetype)globalBlendOrderEnabled:(int)index :(bool)enabled{
     nativeBuilder->globalBlendOrderEnabled(index, enabled);
     return self;
+}
+- (instancetype)boundingBox:(Box *)aabb{
+#warning After Box
+//    nativeBuilder->boundingBox(<#const Box &axisAlignedBoundingBox#>)
 }
 - (instancetype)layerMask:(uint8_t)select :(uint8_t)value{
     nativeBuilder->layerMask(select, value);

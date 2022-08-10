@@ -16,5 +16,5 @@
     self->nativeBuffer = (filament::IndexBuffer*)buffer;
     return self;
 }
-
+#warning Delete
 @end

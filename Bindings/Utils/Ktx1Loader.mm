@@ -9,6 +9,7 @@
 #import <filament/Engine.h>
 #import <filament/IndirectLight.h>
 #import <filament/Skybox.h>
+#import "../Math.h"
 
 @implementation Ktx1Loader
 
@@ -55,6 +56,16 @@
         .build(*nEngine);
     
     return [[Skybox alloc] init: skybox];
+    
+}
++ (simd_double3x3)getSphericalHarmonics:(NSData *)buffer{
+    auto bundle = new ktxreader::Ktx1Bundle((uint8_t*)buffer.bytes, (uint32_t) buffer.length);
+    
+    filament::math::float3 harmonics[9];
+    
+    bundle->getSphericalHarmonics(harmonics);
+    
+    return SIMD_DOUBLE3X3_FROM_MAT3X3(harmonics);
     
 }
 
