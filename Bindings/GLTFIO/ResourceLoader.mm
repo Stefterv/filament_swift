@@ -30,8 +30,9 @@
 }
 
 
-- (instancetype)loadResources:(FilamentAsset *)asset{
+- (instancetype) loadResources:(FilamentAsset *)asset{
     nativeLoader->loadResources((filament::gltfio::FilamentAsset*) asset.asset);
+    return self;
 }
 - (void)addResourceData:(NSString *)uri :(NSData *)buffer{
     nativeLoader->addResourceData([uri UTF8String],filament::gltfio::ResourceLoader::BufferDescriptor(buffer.bytes, buffer.length));
