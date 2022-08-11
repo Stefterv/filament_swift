@@ -141,14 +141,14 @@
  */
 - (void) destroy: (Entity) entity;
 
-typedef NS_ENUM(NSInteger, Type) {
-    Sun = 0,
-    Directional = 1,
-    POINT = 2,
-    FocusedSpot = 3,
-    Spot = 4
+typedef NS_ENUM(NSInteger, LightType) {
+    LightTypeSun = 0,
+    LightTypeDirectional = 1,
+    LightTypePoint = 2,
+    LightTypeFocusedSpot = 3,
+    LightTypeSpot = 4
 };
-- (Type) getType: (EntityInstance) instance;
+- (LightType) getType: (EntityInstance) instance;
 - (bool) isDirectional: (EntityInstance) instance;
 - (bool) isPointLight: (EntityInstance) instance;
 - (bool) isSpotLight: (EntityInstance) instance;

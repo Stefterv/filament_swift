@@ -202,17 +202,17 @@ typedef NS_ENUM(NSInteger,Format) {
 /**
  * Type of sampler
  */
-typedef NS_ENUM(NSInteger,Sampler) {
+typedef NS_ENUM(NSInteger, SamplerType) {
     /** 2D sampler */
-    SAMPLER_2D_,
+    SamplerType2D,
     /** 2D array sampler  */
-    SAMPLER_2D_ARRAY_,
+    SamplerType2DArray,
     /** Cubemap sampler */
-    SAMPLER_CUBEMAP_,
+    SamplerTypeCubemap,
     /** External texture sampler */
-    SAMPLER_EXTERNAL_,
+    SamplerTypeExternal,
     /** 3D sampler */
-    SAMPLER_3D_,
+    SamplerType3D,
 };
 
 typedef NS_ENUM(NSInteger,TextureUsage) {
@@ -267,7 +267,7 @@ NS_SWIFT_NAME(Texture.PixelBufferDescriptor)
 - (unsigned long) getHeight: (int) level;
 - (unsigned long) getDepth: (int) level;
 - (unsigned long) getLevels;
-- (Sampler) getTarget;
+- (SamplerType) getTarget;
 - (InternalFormat) getFormat;
 /**
  * <code>setImage</code> is used to modify the whole content of the texure from a CPU-buffer.

@@ -34,7 +34,7 @@
     nativeBuilder->levels(levels);
     return self;
 }
-- (instancetype)sampler:(Sampler)target{
+- (instancetype)sampler:(SamplerType)target{
     nativeBuilder->sampler( (filament::Texture::Sampler) target);
     return self;
 }

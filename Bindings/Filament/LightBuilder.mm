@@ -13,7 +13,7 @@
     filament::LightManager::Builder* nativeBuilder;
 }
 
-- (id) init: (Type) type{
+- (id) init: (LightType) type{
     auto builder = new filament::LightManager::Builder( (filament::LightManager::Type) type);
     self->_builder = builder;
     self->nativeBuilder = builder;

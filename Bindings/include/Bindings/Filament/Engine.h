@@ -22,11 +22,11 @@
 #import "RenderableManager.h"
 
 typedef NS_ENUM(NSInteger, Backend) {
-    Default,
-    OpenGL,
-    Vulkan,
-    Metal,
-    Noop,
+    BackendDefault,
+    BackendOpenGL,
+    BackendVulkan,
+    BackendMetal,
+    BackendNoop,
 };
 
 /**

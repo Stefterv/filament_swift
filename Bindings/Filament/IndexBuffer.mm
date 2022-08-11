@@ -17,7 +17,19 @@
     return self;
 }
 - (void)setBuffer:(Engine *)engine :(NSData *)buffer :(uint32_t)byteOffset{
-    nativeBuffer->setBuffer(*(filament::Engine*) engine.engine, filament::IndexBuffer::BufferDescriptor(buffer.bytes, buffer.length));
+    const auto deleter = [](void* buffer, size_t size, void* user) {
+        printf("Clear!");
+        delete (uint8_t*) buffer;
+    };
+    auto start = (uint8_t*) buffer.bytes;
+    auto bytes = new uint8_t[buffer.length];
+    std::copy(start, start+buffer.length, bytes);
+    
+    
+    nativeBuffer->setBuffer(*(filament::Engine*) engine.engine, filament::IndexBuffer::BufferDescriptor(bytes, buffer.length, deleter));
+}
+- (size_t)getIndexCount{
+    return nativeBuffer->getIndexCount();
 }
 - (void)setBuffer:(Engine *)engine :(NSData *)buffer{
     [self setBuffer:engine :buffer :0];

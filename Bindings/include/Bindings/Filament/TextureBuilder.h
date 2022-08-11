@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @return This Builder, for chaining calls.
  */
 - (instancetype) levels: (int) levels;
-- (instancetype) sampler: (Sampler) target;
+- (instancetype) sampler: (SamplerType) target;
 /**
  * Specifies the texture's internal format.
  * <p>The internal format specifies how texels are stored (which may be different from how

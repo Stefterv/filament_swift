@@ -15,7 +15,7 @@ NS_SWIFT_NAME(LightManager.Builder)
 @interface LightBuilder : NSObject
 
 @property (nonatomic, readonly, nonnull) void* builder  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (Type) type;
+- (nonnull id) init: (LightType) type;
 - (nonnull id) init NS_UNAVAILABLE;
 
 NS_ASSUME_NONNULL_BEGIN

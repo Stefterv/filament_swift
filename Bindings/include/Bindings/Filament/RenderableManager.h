@@ -19,11 +19,11 @@
 - (nonnull id) init: (nonnull void*) manager NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
 - (nonnull id) init NS_UNAVAILABLE;
 typedef NS_ENUM(NSInteger, PrimitiveType) {
-    POINTS = 0,
-    LINES = 1,
-    LINE_STRIP = 3,
-    TRIANGLES = 4,
-    TRIANGLE_STRIP = 5
+    PrimitiveTypePoints = 0,
+    PrimitiveTypeLines = 1,
+    PrimitiveTypeLineStrip = 3,
+    PrimitiveTypeTriangles = 4,
+    PrimitiveTypeTriangleStrip = 5
 };
 // TODO: Skinning & Morphing functions
 /**

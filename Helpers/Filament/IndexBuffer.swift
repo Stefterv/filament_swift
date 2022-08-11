@@ -9,13 +9,13 @@ import FilamentBindings
 extension IndexBuffer{
     public static func fromArray(_ array: [Int], _ engine: Engine) -> IndexBuffer{
         let indexBuffer = IndexBuffer.Builder()
-            .bufferType(.UINT)
-            .indexCount(UInt32(array.count))
+            .indexCount(array.count)
+            .bufferType(.unsignedShort)
             .build(engine)
         
-        var buffer = Array<UInt8>();
+        var buffer = Array<UInt16>();
         for indx in array{
-            buffer.append(UInt8(indx));
+            buffer.append(UInt16(indx));
         }
         
         buffer.withUnsafeBytes{ bytes in

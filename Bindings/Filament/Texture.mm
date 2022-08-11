@@ -30,8 +30,8 @@
 - (unsigned long)getLevels{
     return nativeTexture->getLevels();
 }
-- (Sampler) getTarget{
-    return (Sampler) nativeTexture->getTarget();
+- (SamplerType) getTarget{
+    return (SamplerType) nativeTexture->getTarget();
 }
 - (InternalFormat)getFormat{
     return (InternalFormat) nativeTexture->getFormat();

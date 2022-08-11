@@ -20,7 +20,20 @@
     return nativeBuffer->getVertexCount();
 }
 - (void)setBufferAt:(Engine *)engine :(int)bufferIndex :(NSData *)data :(int)byteOffset{
-    nativeBuffer->setBufferAt( *(filament::Engine*) engine.engine, bufferIndex, filament::backend::BufferDescriptor(data.bytes, data.length), byteOffset);
+    const auto deleter = [](void* buffer, size_t size, void* user) {
+        printf("Clear!");
+        delete (uint8_t*) buffer;
+    };
+    auto start = (uint8_t*) data.bytes;
+    auto bytes = new uint8_t[data.length];
+    std::copy(start, start+data.length, bytes);
+    auto test2 = bytes[1];
+    auto test3 = bytes[2];
+    auto test4 = bytes[3];
+    auto test5 = (float*)data.bytes;
+    auto le = data.length;
+    
+    nativeBuffer->setBufferAt( *(filament::Engine*) engine.engine, bufferIndex, filament::backend::BufferDescriptor(bytes, data.length, deleter), byteOffset);
 }
 - (void)setBufferAt:(Engine *)engine :(int)bufferIndex :(NSData *)data{
     [self setBufferAt:engine :bufferIndex :data :0];

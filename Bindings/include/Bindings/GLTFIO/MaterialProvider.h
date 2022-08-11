@@ -12,11 +12,11 @@
 #define MaterialProvider_h
 
 NS_SWIFT_NAME(MaterialProvider.AlphaMode)
-//typedef NS_ENUM(NSInteger, AlphaMode) {
-//    OPAQUE,
-//    MASK,
-//    BLEND
-//};
+typedef NS_ENUM(NSInteger, AlphaMode) {
+    AlphaModeOpaque,
+    AlphaModeMask,
+    AlphaModeBlend
+};
 
 NS_SWIFT_NAME(MaterialProvider.MaterialKey)
 @interface MaterialKey : NSObject

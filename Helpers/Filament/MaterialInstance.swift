@@ -43,10 +43,10 @@ extension MaterialInstance{
         setParameterInt4(name, integer)
     }
     public func setParameter(_ name: String, _ matrix: simd_float4x4){
-        
+        #warning("Not set")
     }
     public func setParameter(_ name: String, _ matrix: CGAffineTransform){
-        
+        #warning("Not set")
     }
     public func setParameter(_ name: String, _ texture: Texture, _ sampler: TextureSampler){
         setParameterTexture(name, texture, sampler)

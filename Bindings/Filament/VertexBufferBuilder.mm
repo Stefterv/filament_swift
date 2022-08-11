@@ -22,8 +22,8 @@
     nativeBuffer->bufferCount(bufferCount);
     return self;
 }
-- (instancetype)vertexCount:(int)vertexCount{
-    nativeBuffer->vertexCount(vertexCount);
+- (instancetype)vertexCount:(NSInteger)vertexCount{
+    nativeBuffer->vertexCount((unsigned int)vertexCount);
     return self;
 }
 - (instancetype)enableBufferObjects:(bool)enabled{

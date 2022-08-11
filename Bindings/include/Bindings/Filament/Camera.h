@@ -111,12 +111,12 @@
 @interface Camera : NSObject
 
 typedef NS_ENUM(NSInteger, Projection) {
-    Perspective = 0,
-    Ortho = 1
+    ProjectionPerspective = 0,
+    ProjectionOrtho = 1
 };
 typedef NS_ENUM(NSInteger, Fov) {
-    Vertical = 0,
-    Horizontal = 1
+    ProjectionVertical = 0,
+    ProjectionHorizontal = 1
 };
 
 @property (nonatomic, readonly, nonnull) void* camera NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");

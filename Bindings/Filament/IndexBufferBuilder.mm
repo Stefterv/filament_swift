@@ -19,12 +19,12 @@
 - (id)init{
     return [self init: new filament::IndexBuffer::Builder()];
 }
-- (instancetype)indexCount:(uint32_t)indexCount{
-    nativeBuffer->indexCount(indexCount);
+- (instancetype)indexCount:(NSInteger)indexCount{
+    nativeBuffer->indexCount((uint32_t) indexCount);
     return self;
 }
 - (instancetype)bufferType:(IndexType)type{
-    nativeBuffer->bufferType( (filament::IndexBuffer::IndexType) type);
+    nativeBuffer->bufferType((filament::IndexBuffer::IndexType) type);
     return self;
 }
 - (IndexBuffer *)build:(Engine *)engine{

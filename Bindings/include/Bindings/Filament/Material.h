@@ -10,7 +10,6 @@
 #define Material_h
 
 
-
 NS_SWIFT_NAME(Material.Shading)
 typedef NS_ENUM(NSInteger, Shading) {
     /**
@@ -20,7 +19,7 @@ typedef NS_ENUM(NSInteger, Shading) {
      * <a href="https://google.github.io/filament/Materials.html#materialmodels/unlitmodel">
      * Unlit model</a>
      */
-    UNLIT,
+    ShadingUnlit,
 
     /**
      * Default, standard lighting
@@ -29,7 +28,7 @@ typedef NS_ENUM(NSInteger, Shading) {
      * <a href="https://google.github.io/filament/Materials.html#materialmodels/litmodel">
      * Lit model</a>
      */
-    LIT,
+    ShadingLit,
 
     /**
      * Subsurface lighting model
@@ -38,7 +37,7 @@ typedef NS_ENUM(NSInteger, Shading) {
      * <a href="https://google.github.io/filament/Materials.html#materialmodels/subsurfacemodel">
      * Subsurface model</a>
      */
-    SUBSURFACE,
+    ShadingSubsurface,
 
     /**
      * Cloth lighting model
@@ -47,7 +46,7 @@ typedef NS_ENUM(NSInteger, Shading) {
      * <a href="https://google.github.io/filament/Materials.html#materialmodels/clothmodel">
      * Cloth model</a>
      */
-    CLOTH,
+    ShadingCloth,
 
     /**
      * Legacy lighting model
@@ -56,118 +55,118 @@ typedef NS_ENUM(NSInteger, Shading) {
      * <a href="https://google.github.io/filament/Materials.html#materialmodels/specularglossiness">
      * Specular glossiness</a>
      */
-    SPECULAR_GLOSSINESS
+    ShadingSPECULAR_GLOSSINESS
 };
 NS_SWIFT_NAME(Material.Interpolation)
 typedef NS_ENUM(NSInteger, Interpolation) {
     /** Default, smooth interpolation */
-    SMOOTH,
+    InterpolationSmooth,
 
     /** Flat interpolation */
-    FLAT
+    InterpolationFlat
 };
 NS_SWIFT_NAME(Material.BlendingMode)
 typedef NS_ENUM(NSInteger, BlendingMode) {
     /** Material is opaque. */
-    OPAQUE,
+    BlendingModeOpaque,
 
     /**
      * Material is transparent and color is alpha-pre-multiplied.
      * Affects diffuse lighting only.
      */
-    TRANSPARENT,
+    BlendingModeTransparent,
 
     /** Material is additive (e.g.: hologram). */
-    ADD,
+    BlendingModeAdd,
 
     /** Material is masked (i.e. alpha tested). */
-    MASKED,
+    BlendingModeMasked,
 
     /**
      * Material is transparent and color is alpha-pre-multiplied.
      * Affects specular lighting.
      */
-    FADE,
+    BlendingModeFade,
 
     /** Material darkens what's behind it. */
-    MULTIPLY,
+    BlendingModeMultiply,
 
     /** Material brightens what's behind it. */
-    SCREEN,
+    BlendingModeScreen,
 };
 NS_SWIFT_NAME(Material.RefractionMode)
 typedef NS_ENUM(NSInteger, RefractionMode) {
-    NONE,
-    CUBEMAP,
-    SCREEN_SPACE
+    RefractionModeNone,
+    RefractionModeCubemap,
+    RefractionModeScreen_Space
 };
 NS_SWIFT_NAME(Material.RefractionType)
 typedef NS_ENUM(NSInteger, RefractionType) {
-    SOLID,
-    THIN
+    RefractionTypeSolid,
+    RefractionTypeThin
 };
 NS_SWIFT_NAME(Material.VertexDomain)
 typedef NS_ENUM(NSInteger, VertexDomain) {
     /** Vertices are in object space, default. */
-    OBJECT,
+    VertexDomainObject,
 
     /** Vertices are in world space. */
-    WORLD,
+    VertexDomainWorld,
 
     /** Vertices are in view space. */
-    VIEW,
+    VertexDomainView,
 
     /** Vertices are in normalized device space. */
-    DEVICE
+    VertexDomainDevice
 };
 NS_SWIFT_NAME(Material.CullingMode)
 typedef NS_ENUM(NSInteger, CullingMode) {
     /** No culling. Front and back faces are visible. */
-    None,
+    CullingModeNone,
 
     /** Front face culling. Only back faces are visible. */
-    FRONT,
+    CullingModeFront,
 
     /** Back face culling. Only front faces are visible. */
-    BACK,
+    CullingModeBack,
 
     /** Front and back culling. Geometry is not visible. */
-    FRONT_AND_BACK
+    CullingModeFront_And_Back
 };
 
 NS_SWIFT_NAME(Parameter.Type)
 typedef NS_ENUM(NSInteger, ParameterType) {
-    Bool,
-    BOOL2,
-    BOOL3,
-    BOOL4,
-    FLOAT,
-    FLOAT2,
-    FLOAT3,
-    FLOAT4,
-    INT,
-    INT2,
-    INT3,
-    INT4,
-    UINT,
-    UINT2,
-    UINT3,
-    UINT4,
-    MAT3,
-    MAT4,
-    SAMPLER_2D,
-    SAMPLER_2D_ARRAY,
-    SAMPLER_CUBEMAP,
-    SAMPLER_EXTERNAL,
-    SAMPLER_3D,
-    SUBPASS_INPUT
+    ParameterTypeBool,
+    ParameterTypeBool2,
+    ParameterTypeBool3,
+    ParameterTypeBool4,
+    ParameterTypeFloat,
+    ParameterTypeFloat2,
+    ParameterTypeFloat3,
+    ParameterTypeFloat4,
+    ParameterTypeInt,
+    ParameterTypeInt2,
+    ParameterTypeInt3,
+    ParameterTypeInt4,
+    ParameterTypeUint,
+    ParameterTypeUint2,
+    ParameterTypeUint3,
+    ParameterTypeUint4,
+    ParameterTypeMat3,
+    ParameterTypeMat4,
+    ParameterTypeSampler2D,
+    ParameterTypeSampler2DArray,
+    ParameterTypeSamplerCubemap,
+    ParameterTypeSamplerExternal,
+    ParameterTypeSampler3D,
+    ParameterTypeSubpassInput
 };
 NS_SWIFT_NAME(Parameter.Precision)
 typedef NS_ENUM(NSInteger, ParameterPrecision) {
-    LOW,
-    MEDIUM,
-    HIGH,
-    DEFAULT
+    ParameterPrecisionLow,
+    ParameterPrecisionMedium,
+    ParameterPrecisionHigh,
+    ParameterPrecisionDefault
 };
 
 NS_SWIFT_NAME(Material.Parameter)

@@ -11,8 +11,8 @@
 #define IndexBufferBuilder_h
 
 typedef NS_ENUM(NSInteger, IndexType) {
-    _USHORT,
-    _UINT
+    IndexTypeUnsignedShort = 12,
+    IndexTypeUnsignedInt = 17
 };
 
 
@@ -24,7 +24,7 @@ NS_SWIFT_NAME(IndexBuffer.Builder)
 - (nonnull id) init;
 
 NS_ASSUME_NONNULL_BEGIN
-- (instancetype) indexCount: (uint32_t) indexCount;
+- (instancetype) indexCount: (NSInteger) indexCount;
 - (instancetype) bufferType: (IndexType) type;
 - (IndexBuffer*) build: (Engine*) engine;
 NS_ASSUME_NONNULL_END

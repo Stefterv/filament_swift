@@ -13,20 +13,20 @@
 #define View_h
 
 typedef NS_ENUM(NSInteger, BlendMode) {
-    Opaque,
-    Translucent,
+    BlendModeOpaque,
+    BlendModeTranslucent,
 };
 
 typedef NS_ENUM(NSInteger, QualityLevel) {
-    Low,
-    Medium,
-    High,
-    Ultra,
+    QualityLevelLow,
+    QualityLevelMedium,
+    QualityLevelHigh,
+    QualityLevelUltra,
 };
 
 typedef NS_ENUM(NSInteger, AntiAliasing) {
-    NOAA,
-    FXAA
+    AntiAliasingNOAA,
+    AntiAliasingFXAA
 };
 
 

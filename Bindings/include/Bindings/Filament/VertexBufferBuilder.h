@@ -13,32 +13,32 @@
 #define VertexBufferBuilder_h
 
 typedef NS_ENUM(NSInteger, AttributeType) {
-    BYTE,
-    BYTE2,
-    BYTE3,
-    BYTE4,
-    UBYTE,
-    UBYTE2,
-    UBYTE3,
-    UBYTE4,
-    SHORT,
-    SHORT2,
-    SHORT3,
-    SHORT4,
-    USHORT,
-    USHORT2,
-    USHORT3,
-    USHORT4,
-    _INT,
-    __UINT,
-    _FLOAT,
-    _FLOAT2,
-    _FLOAT3,
-    _FLOAT4,
-    HALF,
-    HALF2,
-    HALF3,
-    HALF4,
+    AttributeTypeByte,
+    AttributeTypeByte2,
+    AttributeTypeByte3,
+    AttributeTypeByte4,
+    AttributeTypeUbyte,
+    AttributeTypeUbyte2,
+    AttributeTypeUbyte3,
+    AttributeTypeUbyte4,
+    AttributeTypeShort,
+    AttributeTypeShort2,
+    AttributeTypeShort3,
+    AttributeTypeShort4,
+    AttributeTypeUshort,
+    AttributeTypeUshort2,
+    AttributeTypeUshort3,
+    AttributeTypeUshort4,
+    AttributeTypeInt,
+    AttributeTypeUint,
+    AttributeTypeFloat,
+    AttributeTypeFloat2,
+    AttributeTypeFloat3,
+    AttributeTypeFloat4,
+    AttributeTypeHalf,
+    AttributeTypeHalf2,
+    AttributeTypeHalf3,
+    AttributeTypeHalf4,
 };
 
 
@@ -50,7 +50,7 @@ NS_SWIFT_NAME(VertexBuffer.Builder)
 - (nonnull id) init;
 NS_ASSUME_NONNULL_BEGIN
 - (instancetype) bufferCount: (int) bufferCount;
-- (instancetype) vertexCount: (int) vertexCount;
+- (instancetype) vertexCount: (NSInteger) vertexCount;
 /**
  * Allows buffers to be swapped out and shared using BufferObject.
  *

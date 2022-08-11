@@ -29,8 +29,8 @@
 - (void)destroy:(Entity)entity{
     nativeManager->destroy(utils::Entity::import(entity));
 }
-- (Type)getType:(EntityInstance)instance{
-    return (Type)nativeManager->getType(instance);
+- (LightType)getType:(EntityInstance)instance{
+    return (LightType)nativeManager->getType(instance);
 }
 - (bool)isDirectional:(EntityInstance)instance{
     return nativeManager->isDirectional(instance);
