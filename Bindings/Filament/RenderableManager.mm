@@ -6,6 +6,7 @@
 #import "Bindings/Filament/RenderableManager.h"
 #import <filament/RenderableManager.h>
 #import <filament/Box.h>
+#import "../Math.h"
 
 @implementation RenderableManager{
     filament::RenderableManager* nativeManager;
@@ -18,11 +19,13 @@
 }
 
 - (void)setAxisAlignedBoundingBox:(EntityInstance)instance :(Box *)aabb{
-# warning Figure out box
+    nativeManager->setAxisAlignedBoundingBox(instance, FROM_BOX(aabb));
 }
 
+
 - (Box *)getAxisAlignedBoundingBox:(EntityInstance)instance{
-# warning Figure out box
+    auto box = nativeManager->getAxisAlignedBoundingBox(instance);
+    return TO_BOX(box);
 }
 
 - (void)setLayerMask:(EntityInstance)instance :(uint8_t)select :(uint8_t)value{

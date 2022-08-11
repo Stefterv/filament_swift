@@ -6,14 +6,12 @@
 #import <filament/Box.h>
 
 @implementation Box{
-    filament::Box* nativeBox;
+    
 }
-
-- (id) init:(void *)box{
-    self->_box = box;
-    self->nativeBox = (filament::Box*)box;
-    return self;
+- (id)initWithVector:(simd_double3)center :(simd_double3)halfExtent{
+    self = [self init];
+    [self setCenter:center];
+    [self setHalfExtent:halfExtent];
 }
-# warning Implement Box
 
 @end

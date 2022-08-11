@@ -37,7 +37,7 @@
     return (InternalFormat) nativeTexture->getFormat();
 }
 - (void)setImage:(Engine *)engine :(int)level :(NSData *)buffer{
-# warning Figure out NSData -> Pixelbufferdescriptor
+# warning Add PixelBufferDescriptorpixelbuffer
 //    nativeTexture->setImage(*(filament::Engine*) engine.engine, level, filament::Texture::PixelBufferDescriptor(buffer.bytes, buffer.length));
 }
 - (void)setImage:(Engine *)engine :(int)level :(NSData *)buffer :(simd_double2x3)faceOffset{
@@ -56,7 +56,7 @@
     nativeTexture->generateMipmaps( *(filament::Engine*) engine.engine);
 }
 - (void)generatePrefilterMipmap:(Engine *)engine :(NSData *)buffer :(simd_double2x3)faceOffset :(PrefilterOptions *)options{
-# warning Figure out NSData -> Pixelbufferdescriptor
+# warning Add PixelBufferDescriptorpixelbuffer
     //nativeTexture->generatePrefilterMipmap(*(filament::Engine*) engine.engine, <#PixelBufferDescriptor &&buffer#>, <#const FaceOffsets &faceOffsets#>)
 }
 @end

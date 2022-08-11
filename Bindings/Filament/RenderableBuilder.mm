@@ -6,6 +6,7 @@
 #import "Bindings/Filament/RenderableBuilder.h"
 #import <filament/RenderableManager.h>
 #import <utils/Entity.h>
+#import "../Math.h"
 
 @implementation RenderableBuilder{
     filament::RenderableManager::Builder* nativeBuilder;
@@ -35,8 +36,7 @@
     return self;
 }
 - (instancetype)boundingBox:(Box *)aabb{
-#warning After Box
-//    nativeBuilder->boundingBox(<#const Box &axisAlignedBoundingBox#>)
+    nativeBuilder->boundingBox(FROM_BOX(aabb));
 }
 - (instancetype)layerMask:(uint8_t)select :(uint8_t)value{
     nativeBuilder->layerMask(select, value);
