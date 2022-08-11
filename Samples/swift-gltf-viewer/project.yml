@@ -10,20 +10,20 @@ targets:
         sources:
             - path: 'Download.glb'
               buildPhase: resources
-            - path: 'generated/default_env/default_env_ibl.ktx'
-              buildPhase: resources
-              optional: true
-            - path: 'generated/default_env/default_env_skybox.ktx'
-              buildPhase: resources
-              optional: true
+            # - path: 'generated/default_env/default_env_ibl.ktx'
+            #   buildPhase: resources
+            #   optional: true
+            # - path: 'generated/default_env/default_env_skybox.ktx'
+            #   buildPhase: resources
+            #   optional: true
         templates:
             - FilamentApp
-        preBuildScripts:
-            - path: build-resources.sh
-              name: Build Resources
-              inputFiles:
-                - $(SRCROOT)/../../../../third_party/environments/lightroom_14b.hdr
-              outputFiles:
-                - $(SRCROOT)/generated/default_env/default_env_ibl.ktx
-                - $(SRCROOT)/generated/default_env/default_env_skybox.ktx
+        # preBuildScripts:
+        #     - path: build-resources.sh
+        #       name: Build Resources
+        #       inputFiles:
+        #         - $(SRCROOT)/../../../../third_party/environments/lightroom_14b.hdr
+        #       outputFiles:
+        #         - $(SRCROOT)/generated/default_env/default_env_ibl.ktx
+        #         - $(SRCROOT)/generated/default_env/default_env_skybox.ktx
 

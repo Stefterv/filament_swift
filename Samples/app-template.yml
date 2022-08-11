@@ -20,4 +20,4 @@ targetTemplates:
         SAMPLE_CODE_DISAMBIGUATOR: ${DEVELOPMENT_TEAM}
 packages:
   Filament:
-    path: ../../../../
+    path: ../../

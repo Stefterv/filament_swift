@@ -66,22 +66,22 @@ class FilaSceneProps : ObservableObject{
         scene.addEntities(ents);
         
         let sun = entManager.create();
-        LightManager.Builder(.Sun)
+        LightManager.Builder(.sun)
             .castShadows(true)
             .direction(simd_double3(0.0, -1.0, 0.0))
             .build(engine, sun)
         scene.addEntity(sun)
         
-        let iblURL = Bundle.main.url(forResource: "default_env_ibl", withExtension: ".ktx")!
-        guard let iblData = try? Data(contentsOf: iblURL) else { return }
-        
-        scene.setIndirectLight(Ktx1Loader.createIndirectLight(engine, iblData, false))
-        
-        let skbURL = Bundle.main.url(forResource: "default_env_ibl", withExtension: ".ktx")!
-        guard let skbData = try? Data(contentsOf: skbURL) else { return }
-        
-        let skybox = Ktx1Loader.createSkybox(engine, skbData, false)
-        scene.skybox = skybox
+//        let iblURL = Bundle.main.url(forResource: "default_env_ibl", withExtension: ".ktx")!
+//        guard let iblData = try? Data(contentsOf: iblURL) else { return }
+//
+//        scene.setIndirectLight(Ktx1Loader.createIndirectLight(engine, iblData, false))
+//
+//        let skbURL = Bundle.main.url(forResource: "default_env_ibl", withExtension: ".ktx")!
+//        guard let skbData = try? Data(contentsOf: skbURL) else { return }
+//
+//        let skybox = Ktx1Loader.createSkybox(engine, skbData, false)
+//        scene.skybox = skybox
         
     }
     func setClear(color: CIColor){
