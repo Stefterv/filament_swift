@@ -59,5 +59,10 @@
     auto texture = nativeBuilder->build( *(filament::Engine*)engine.engine);
     return [[Texture alloc] init:texture];
 }
+- (instancetype)import:(CFTypeRef)texture{
+    nativeBuilder->import((intptr_t) texture);
+    return self;
+}
+
 
 @end

@@ -74,6 +74,7 @@
 }
 - (instancetype)build:(Engine *)engine :(Entity)entity{
     nativeBuilder->build( *(filament::Engine*)engine.engine , utils::Entity::import(entity));
+    return self;
 }
 
 @end

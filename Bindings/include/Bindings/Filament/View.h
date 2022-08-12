@@ -29,7 +29,61 @@ typedef NS_ENUM(NSInteger, AntiAliasing) {
     AntiAliasingFXAA
 };
 
+typedef struct{
+    float lightConeRad;
+    float shadowDistance;
+    float contactDistanceMax;
+    float intensity;
+    simd_float3 lightDirection;
+    float depthBias;
+    float depthSlopeBias;
+    uint8_t sampleCount;
+    uint8_t rayCount;
+    bool enabled;
+} Ssct;
 
+typedef struct{
+    float radius;
+    float power;
+    float bias;
+    float resolution ;
+    float intensity;
+    float bilateralThreshold ;
+    QualityLevel quality;
+    QualityLevel lowPassFilter;
+    QualityLevel upsampling;
+    bool enabled;
+    bool bentNormals;
+    float minHorizonAngleRad;
+    Ssct ssct;
+} AmbientOcclusionOptions;
+NS_SWIFT_NAME(AmbientOcclusionOptions.Default)
+const AmbientOcclusionOptions AmbientOcclusionOptionsDefault = {
+    .radius=0.3f,                       //!< Ambient Occlusion radius in meters, between 0 and ~10.
+    .power=1.0f,                        //!< Controls ambient occlusion's contrast. Must be positive.
+    .bias=0.0005f,                      //!< Self-occlusion bias in meters. Use to avoid self-occlusion. Between 0 and a few mm.
+    .resolution=0.5f,                   //!< How each dimension of the AO buffer is scaled. Must be either 0.5 or 1.0.
+    .intensity=1.0f,                    //!< Strength of the Ambient Occlusion effect.
+    .bilateralThreshold=0.05f,          //!< depth distance that constitute an edge for filtering
+    .quality=QualityLevelLow,           //!< affects # of samples used for AO.
+    .lowPassFilter=QualityLevelMedium,  //!< affects AO smoothness
+    .upsampling=QualityLevelLow,        //!< affects AO buffer upsampling quality
+    .enabled=false,                     //!< enables or disables screen-space ambient occlusion
+    .bentNormals=false,                 //!< enables bent normals computation from AO, and specular AO
+    .minHorizonAngleRad=0.0f,           //!< min angle in radian to consider
+    .ssct={
+        .lightConeRad = 1.0f,           //!< full cone angle in radian, between 0 and pi/2
+        .shadowDistance = 0.3f,         //!< how far shadows can be cast
+        .contactDistanceMax = 1.0f,     //!< max distance for contact
+        .intensity = 0.8f,              //!< intensity
+        .lightDirection ={ 0, -1, 0 },  //!< light direction
+        .depthBias = 0.01f,             //!< depth bias in world units (mitigate self shadowing)
+        .depthSlopeBias = 0.01f,        //!< depth slope bias (mitigate self shadowing)
+        .sampleCount = 4,               //!< tracing sample count, between 1 and 255
+        .rayCount = 1,                  //!< # of rays to trace, between 1 and 255
+        .enabled = false                //!< enables or disables SSCT
+    }
+};
 
 /**
  * Encompasses all the state needed for rendering a {@link Scene}.
@@ -187,7 +241,16 @@ typedef NS_ENUM(NSInteger, AntiAliasing) {
  */
 - (void) setAntiAliasing: (AntiAliasing) type;
 - (AntiAliasing) getAntiAliasing;
+/**
+ * Sets ambient occlusion options.
+ *
+ * @param options Options for ambient occlusion.
+ */
+- (void) setAmbientOcclusionOptions: (AmbientOcclusionOptions) options;
+- (AmbientOcclusionOptions) getAmbientOcclusionOptions;
 
+
+#warning Extend to most options
 @end
 
 #endif /* View_h */

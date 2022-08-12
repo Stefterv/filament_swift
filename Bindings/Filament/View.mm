@@ -8,6 +8,7 @@
 #import "Bindings/Filament/View.h"
 #import <filament/View.h>
 #import <filament/Viewport.h>
+#import <simd/simd.h>
 
 @implementation View{
     filament::View* nativeView;
@@ -79,6 +80,64 @@
 }
 - (AntiAliasing)getAntiAliasing{
     return (AntiAliasing) nativeView->getAntiAliasing();
+}
+
+- (void)setAmbientOcclusionOptions:(AmbientOcclusionOptions)options{
+    nativeView->setAmbientOcclusionOptions({
+        .radius=options.radius,
+        .power=options.power,
+        .bias=options.bias,
+        .resolution=options.resolution,
+        .intensity=options.intensity,
+        .bilateralThreshold=options.bilateralThreshold,
+        .quality=(filament::QualityLevel)options.quality,
+        .lowPassFilter=(filament::QualityLevel)options.lowPassFilter,
+        .upsampling=(filament::QualityLevel)options.upsampling,
+        .enabled=options.enabled,
+        .bentNormals=options.bentNormals,
+        .minHorizonAngleRad=options.minHorizonAngleRad,
+        .ssct={
+            .lightConeRad=options.ssct.lightConeRad,
+            .shadowDistance=options.ssct.shadowDistance,
+            .contactDistanceMax=options.ssct.contactDistanceMax,
+            .intensity=options.ssct.intensity,
+            .lightDirection=*(filament::math::float3*)&options.ssct.lightDirection,
+            .depthBias=options.ssct.depthBias,
+            .depthSlopeBias=options.ssct.depthSlopeBias,
+            .sampleCount=options.ssct.sampleCount,
+            .rayCount=options.ssct.rayCount,
+            .enabled=options.ssct.enabled
+        }
+    });
+}
+- (AmbientOcclusionOptions)getAmbientOcclusionOptions{
+    auto options = nativeView->getAmbientOcclusionOptions();
+    return {
+        .radius=options.radius,
+        .power=options.power,
+        .bias=options.bias,
+        .resolution=options.resolution,
+        .intensity=options.intensity,
+        .bilateralThreshold=options.bilateralThreshold,
+        .quality=(QualityLevel)options.quality,
+        .lowPassFilter=(QualityLevel)options.lowPassFilter,
+        .upsampling=(QualityLevel)options.upsampling,
+        .enabled=options.enabled,
+        .bentNormals=options.bentNormals,
+        .minHorizonAngleRad=options.minHorizonAngleRad,
+        .ssct={
+            .lightConeRad=options.ssct.lightConeRad,
+            .shadowDistance=options.ssct.shadowDistance,
+            .contactDistanceMax=options.ssct.contactDistanceMax,
+            .intensity=options.ssct.intensity,
+            .lightDirection=*(simd_float3*)&options.ssct.lightDirection,
+            .depthBias=options.ssct.depthBias,
+            .depthSlopeBias=options.ssct.depthSlopeBias,
+            .sampleCount=options.ssct.sampleCount,
+            .rayCount=options.ssct.rayCount,
+            .enabled=options.ssct.enabled
+        }
+    };
 }
 
 @end

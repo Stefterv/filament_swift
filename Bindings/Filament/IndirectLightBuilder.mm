@@ -45,6 +45,7 @@
         cols[0][0], cols[0][1], cols[0][2],
         cols[1][0], cols[1][1], cols[1][2],
         cols[2][0], cols[2][1], cols[2][2],
+        
     };
     nativeBuilder->radiance(bands, harmonics);
     return self;
