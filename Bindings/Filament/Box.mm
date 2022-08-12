@@ -5,13 +5,15 @@
 #import "Bindings/Filament/Box.h"
 #import <filament/Box.h>
 
-@implementation Box{
-    
-}
-- (id)initWithVector:(simd_double3)center :(simd_double3)halfExtent{
+@implementation Box
+
+- (id)initWithVector:(simd_double3)center Extent:(simd_double3)halfExtent{
     self = [self init];
-    [self setCenter:center];
-    [self setHalfExtent:halfExtent];
+    self->_center = center;
+    self->_halfExtent = halfExtent;
+    return self;
 }
+
+
 
 @end

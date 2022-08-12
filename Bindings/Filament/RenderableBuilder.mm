@@ -32,7 +32,7 @@ typedef struct
     float v;
 } Vertex;
 
-- (instancetype)geometry:(int)index :(PrimitiveType)type :(VertexBuffer *)vertices2 :(IndexBuffer *)indices2 :(int)offset :(int)count :(Engine*) engine{
+- (instancetype)geometry:(int)index :(PrimitiveType)type :(VertexBuffer *)vertices2 :(IndexBuffer *)indices2 :(NSInteger)offset :(NSInteger)count :(Engine*) engine{
     auto vertexBuffer2 = (filament::VertexBuffer*) vertices2.buffer;
     auto indexBuffer2 = (filament::IndexBuffer*) indices2.buffer;
     nativeBuilder->geometry(index,filament::RenderableManager::PrimitiveType::TRIANGLES, vertexBuffer2, indexBuffer2, offset, count);
@@ -52,6 +52,7 @@ typedef struct
 }
 - (instancetype)boundingBox:(Box *)aabb{
     nativeBuilder->boundingBox(FROM_BOX(aabb));
+    return self;
 }
 - (instancetype)layerMask:(uint8_t)select :(uint8_t)value{
     nativeBuilder->layerMask(select, value);

@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param maxIndex specifies the maximum index contained in the index buffer
  * @param count number of indices to read (for triangles, this should be a multiple of 3)
  */
-- (instancetype) geometry: (int) index :(PrimitiveType) type :(VertexBuffer*) vertices :(IndexBuffer*) indices :(int) offset :(int) count :(Engine*) engine;
+- (instancetype) geometry: (int) index :(PrimitiveType) type :(VertexBuffer*) vertices :(IndexBuffer*) indices :(NSInteger) offset :(NSInteger) count :(Engine*) engine;
 
 /**
  * Binds a material instance to the specified primitive.

@@ -11,9 +11,9 @@
 
 @interface Box : NSObject
 
-@property (nonatomic) simd_double3 center;
-@property (nonatomic) simd_double3 halfExtent;
-- (id) initWithVector: (simd_double3) center :(simd_double3) halfExtent;
+@property simd_double3 center;
+@property simd_double3 halfExtent;
+- (nonnull id) initWithVector: (simd_double3) center Extent:(simd_double3) halfExtent;
 
 @end
 
