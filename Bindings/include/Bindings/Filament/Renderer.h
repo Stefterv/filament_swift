@@ -17,11 +17,13 @@
 #ifndef Renderer_h
 #define Renderer_h
 
+#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.DisplayInfo)
 @interface DisplayInfo : NSObject
 @property double refreshRate;
 @end
 
+#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.FrameRateOptions)
 @interface FrameRateOptions : NSObject
 @property double interval;
@@ -30,6 +32,7 @@ NS_SWIFT_NAME(Renderer.FrameRateOptions)
 @property double history;
 @end
 
+#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.ClearOptions)
 @interface ClearOptions : NSObject
 @property CIColor*_Nonnull clearColor;

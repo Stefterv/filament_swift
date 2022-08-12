@@ -9,20 +9,10 @@
 #ifndef Box_h
 #define Box_h
 
-@interface Box : NSObject
+typedef struct{
+    simd_float3 center;
+    simd_float3 halfExtent;
+} Box;
 
-@property simd_double3 center;
-@property simd_double3 halfExtent;
-- (nonnull id) initWithVector: (simd_double3) center Extent:(simd_double3) halfExtent;
-
-@end
-
-
-@interface AAB: NSObject
-
-@property (nonatomic) simd_double3 min;
-@property (nonatomic) simd_double3 max;
-
-@end
 
 #endif /* Box_h */

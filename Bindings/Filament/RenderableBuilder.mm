@@ -50,8 +50,11 @@ typedef struct
     nativeBuilder->globalBlendOrderEnabled(index, enabled);
     return self;
 }
-- (instancetype)boundingBox:(Box *)aabb{
-    nativeBuilder->boundingBox(FROM_BOX(aabb));
+- (instancetype)boundingBox:(Box)aabb{
+    nativeBuilder->boundingBox({
+        .center=*(filament::math::float3*)&aabb.center,
+        .halfExtent=*(filament::math::float3*)&aabb.halfExtent
+    });
     return self;
 }
 - (instancetype)layerMask:(uint8_t)select :(uint8_t)value{

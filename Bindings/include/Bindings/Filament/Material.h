@@ -169,6 +169,7 @@ typedef NS_ENUM(NSInteger, ParameterPrecision) {
     ParameterPrecisionDefault
 };
 
+#warning Replace with Struct
 NS_SWIFT_NAME(Material.Parameter)
 @interface Parameter : NSObject
 @property ParameterType type;

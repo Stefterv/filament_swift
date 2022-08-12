@@ -18,14 +18,20 @@
     return self;
 }
 
-- (void)setAxisAlignedBoundingBox:(EntityInstance)instance :(Box *)aabb{
-    nativeManager->setAxisAlignedBoundingBox(instance, FROM_BOX(aabb));
+- (void)setAxisAlignedBoundingBox:(EntityInstance)instance :(Box)aabb{
+    nativeManager->setAxisAlignedBoundingBox(instance, {
+        .center=*(filament::math::float3*)&aabb.center,
+        .halfExtent=*(filament::math::float3*)&aabb.halfExtent
+    });
 }
 
 
-- (Box *)getAxisAlignedBoundingBox:(EntityInstance)instance{
+- (Box)getAxisAlignedBoundingBox:(EntityInstance)instance{
     auto box = nativeManager->getAxisAlignedBoundingBox(instance);
-    return TO_BOX(box);
+    return {
+        .center=*(simd_float3*)&box.center,
+        .halfExtent=*(simd_float3*)&box.halfExtent
+    };
 }
 
 - (void)setLayerMask:(EntityInstance)instance :(uint8_t)select :(uint8_t)value{

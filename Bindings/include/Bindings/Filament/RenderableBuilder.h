@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  * should encompass all possible vertex positions. It is mandatory unless culling is
  * disabled for the renderable.</p>
  */
-- (instancetype) boundingBox: (Box*) aabb;
+- (instancetype) boundingBox: (Box) aabb;
 /**
  * Sets bits in a visibility mask. By default, this is 0x1.
  *

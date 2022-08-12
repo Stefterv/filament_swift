@@ -8,6 +8,7 @@
 #ifndef Viewport_h
 #define Viewport_h
 
+#warning Replace with Struct
 @interface Viewport : NSObject
 @property int left;
 @property int bottom;
