@@ -46,7 +46,7 @@
 }
 - (void)setImage:(Engine *)engine :(int)level :(int)xoffset :(int)yoffset :(int)zoffset :(int)width :(int)height :(int)depth :(NSData *)buffer{
 }
-- (void)setExternalImage:(Engine *)engine :(void *)image{
+- (void)setExternalImage:(Engine *)engine :(CVPixelBufferRef)image{
     nativeTexture->setExternalImage(*(filament::Engine*) engine.engine, image);
 }
 - (void)setExternalStream:(Engine *)engine :(Stream *)stream{

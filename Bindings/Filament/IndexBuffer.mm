@@ -18,7 +18,6 @@
 }
 - (void)setBuffer:(Engine *)engine :(NSData *)buffer :(uint32_t)byteOffset{
     const auto deleter = [](void* buffer, size_t size, void* user) {
-        printf("Clear!");
         delete (uint8_t*) buffer;
     };
     auto start = (uint8_t*) buffer.bytes;

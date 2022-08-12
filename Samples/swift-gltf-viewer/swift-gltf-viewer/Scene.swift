@@ -83,7 +83,56 @@ class FilaSceneProps : ObservableObject{
 //        let skybox = Ktx1Loader.createSkybox(engine, skbData, false)
 //        scene.skybox = skybox
         
+        let triangle = entManager.create()
+        let mesh = createTriangleMesh();
+        createRenderable(entity: triangle, mesh: mesh, material: nil)
+        scene.addEntity(triangle)
     }
+    
+    func createTriangleMesh() -> Mesh{
+        let vertices: [Vertex] = [
+            Vertex(x: -0.1, y: -0.1, z: 0.0, w: 1.0, u: 0.0, v: 1.0),
+            Vertex(x: 0.3, y: -0.1, z: 0.0, w: 1.0, u: 2.0, v: 1.0),
+            Vertex(x: -0.1, y: 0.3, z: 0.0, w: 1.0, u: 0, v: -1.0)
+        ]
+        
+        let indices: [Int] = [0,1,2];
+        
+        return Mesh(vertices: vertices, indices: indices)
+    }
+    struct Vertex{
+        let x: Float
+        let y: Float
+        let z: Float
+        let w: Float
+        let u: Float
+        let v: Float
+    }
+    struct Mesh{
+        var vertices: [Vertex]
+        var indices: [Int]
+    }
+    func createRenderable(entity: Entity, mesh: Mesh, material: MaterialInstance?){
+        let vertexBuffer = VertexBuffer.Builder()
+            .vertexCount(mesh.vertices.count)
+            .bufferCount(1)
+            .attribute(.position, 0, .float4, 0, 24)
+            .attribute(.uv0, 0, .float2, 16, 24)
+            .build(engine)
+        mesh.vertices.withUnsafeBytes{ bytes in
+            vertexBuffer.setBufferAt(engine, 0, Data(bytes))
+        }
+        let indexBuffer = IndexBuffer.fromArray(mesh.indices, engine);
+        
+        
+        RenderableManager.Builder(1)
+            .geometry(0, .triangles, vertexBuffer, indexBuffer, 0, 3, engine)
+            .receiveShadows(false)
+            .castShadows(false)
+            .culling(false)
+            .build(engine, entity);
+    }
+    
     func setClear(color: CIColor){
         let opt = Renderer.ClearOptions()
         opt.clearColor = color
@@ -120,7 +169,7 @@ class FilaSceneProps : ObservableObject{
             view.viewport = Viewport(left: 0, bottom: 0, width: Int32(size.width), height: Int32(size.height))
             
             let origin = SCNNode()
-            origin.position = SCNVector3(0, 0.5, 0.5)
+            origin.position = SCNVector3(0, 1, 1)
             
             // TODO: Move to own entity
             camera.setLensProjection(50, size.width/size.height, 0.01, 10)

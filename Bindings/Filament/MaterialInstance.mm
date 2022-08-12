@@ -7,6 +7,7 @@
 #import <filament/MaterialInstance.h>
 #import <filament/Texture.h>
 #import <filament/TextureSampler.h>
+#import "../Math.h"
 
 @implementation MaterialInstance{
     filament::MaterialInstance* nativeInstance;
@@ -60,6 +61,12 @@
 }
 - (void)setParameterInt4:(NSString *)name :(simd_int4)vector{
     nativeInstance->setParameter(name.UTF8String, filament::math::int4(vector.x, vector.y, vector.z, vector.w));
+}
+- (void)setParameterMat3f:(NSString *)name :(simd_float3x3)vector{
+    nativeInstance->setParameter(name.UTF8String, MAT3F_FROM_SIMD(vector));
+}
+- (void)setParameterMat4f:(NSString *)name :(simd_float4x4)vector{
+    nativeInstance->setParameter(name.UTF8String, MAT4F_FROM_SIMD(vector));
 }
 - (void)setParameterTexture:(NSString *)name :(Texture *)texture :(TextureSampler *)sampler{
     nativeInstance->setParameter(name.UTF8String, (filament::Texture*) texture.texture, *(filament::TextureSampler*) sampler.sampler);

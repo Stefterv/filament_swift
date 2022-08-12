@@ -5,6 +5,7 @@
 //
 #import <Foundation/Foundation.h>
 #import <simd/simd.h>
+#import <CoreVideo/CoreVideo.h>
 
 #ifndef Texture_h
 #define Texture_h
@@ -403,7 +404,7 @@ NS_SWIFT_NAME(Texture.PixelBufferDescriptor)
  *
  * @see Builder#sampler
  */
-- (void) setExternalImage: (nonnull Engine*) engine :(nullable void*) image;
+- (void) setExternalImage: (nonnull Engine*) engine :(nonnull CVPixelBufferRef) image;
 /**
  * Specifies the external stream to associate with this <code>Texture</code>.
  *

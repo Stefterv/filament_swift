@@ -9,14 +9,16 @@
 @implementation TextureSampler{
     filament::TextureSampler* nativeSampler;
 }
-
+ 
 - (id) init:(void *)sampler{
     self->_sampler = sampler;
     self->nativeSampler = (filament::TextureSampler*)sampler;
     return self;
 }
 - (id)init{
-    return [self init: new filament::TextureSampler()];
+    self->nativeSampler = new filament::TextureSampler();
+    self->_sampler = self->nativeSampler;
+    return self;
 }
 
 @end

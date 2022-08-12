@@ -33,60 +33,9 @@ typedef struct
 } Vertex;
 
 - (instancetype)geometry:(int)index :(PrimitiveType)type :(VertexBuffer *)vertices2 :(IndexBuffer *)indices2 :(int)offset :(int)count :(Engine*) engine{
-    const auto deleter = [](void* buffer, size_t size, void* user) {
-       delete (uint8_t*) buffer;
-    };
-
-    auto vertexCount = 3;
-    auto indexCount = 3;
-    
-    
-    Vertex vertices[3]{
-        Vertex(),
-        Vertex(),
-        Vertex()
-    };
-    vertices[0].x = -1.0;
-    vertices[0].y = -1.0;
-    vertices[1].x = 3.0;
-    vertices[1].y = -1.0;
-    vertices[2].x = -1.0;
-    vertices[2].y = 3.0;
-    
-    auto verts = new Vertex[vertexCount];
-    std::copy(vertices, vertices + vertexCount, verts);
- 
-    auto vertexBuffer = filament::VertexBuffer::Builder()
-        .vertexCount(3)
-        .bufferCount(1)
-        .attribute(filament::VertexAttribute::POSITION, 0, filament::VertexBuffer::AttributeType::FLOAT4, offsetof(Vertex, x), sizeof(Vertex))
-        .attribute(filament::VertexAttribute::UV0, 0, filament::VertexBuffer::AttributeType::FLOAT2, offsetof(Vertex, u), sizeof(Vertex))
-        .build(*(filament::Engine*)engine.engine);
-    ;
     auto vertexBuffer2 = (filament::VertexBuffer*) vertices2.buffer;
-    
-    vertexBuffer->setBufferAt(*(filament::Engine*)engine.engine, 0, filament::VertexBuffer::BufferDescriptor(verts, vertexCount * sizeof(Vertex), deleter));
-    
-    
-    uint16_t indices[3]{
-        0,1,2
-    };
-    
-    // create a new buffer on the heap
-    auto inds = new uint16_t[indexCount];
-    std::copy(indices, indices + indexCount, inds);
-    
-    
-    
-    auto indexBuffer = filament::IndexBuffer::Builder()
-        .indexCount(3)
-        .bufferType(filament::IndexBuffer::IndexType::USHORT)
-        .build(*(filament::Engine*)engine.engine);
     auto indexBuffer2 = (filament::IndexBuffer*) indices2.buffer;
-    indexBuffer->setBuffer(*(filament::Engine*)engine.engine,  filament::IndexBuffer::BufferDescriptor(inds, indexCount * sizeof(uint16_t), deleter));
-    
-    
-    nativeBuilder->geometry(index,filament::RenderableManager::PrimitiveType::TRIANGLES, vertexBuffer, indexBuffer2, offset, count);
+    nativeBuilder->geometry(index,filament::RenderableManager::PrimitiveType::TRIANGLES, vertexBuffer2, indexBuffer2, offset, count);
     return self;
 }
 - (instancetype)material:(int)index :(MaterialInstance *)material{

@@ -33,6 +33,11 @@
          m.columns[1][0], m.columns[1][1], m.columns[1][2], m.columns[1][3], \
          m.columns[2][0], m.columns[2][1], m.columns[2][2], m.columns[2][3], \
          m.columns[3][0], m.columns[3][1], m.columns[3][2], m.columns[3][3]))
+#define MAT4F_FROM_SIMD(m) (filament::math::mat4f \
+        (m.columns[0][0], m.columns[0][1], m.columns[0][2], m.columns[0][3], \
+         m.columns[1][0], m.columns[1][1], m.columns[1][2], m.columns[1][3], \
+         m.columns[2][0], m.columns[2][1], m.columns[2][2], m.columns[2][3], \
+         m.columns[3][0], m.columns[3][1], m.columns[3][2], m.columns[3][3]))
 #define FROM_BOX(box) (filament::Box{ FLOAT3_FROM_SIMD(box.center), FLOAT3_FROM_SIMD(box.halfExtent) })
 #define TO_BOX(box) [[Box alloc] initWithVector:SIMD_DOUBLE3_FROM_FLOAT3(box.center) :SIMD_DOUBLE3_FROM_FLOAT3(box.halfExtent)];
 
