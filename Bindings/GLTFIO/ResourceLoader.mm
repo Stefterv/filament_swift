@@ -36,6 +36,10 @@
 - (void)addResourceData:(NSString *)uri :(NSData *)buffer{
     nativeLoader->addResourceData([uri UTF8String],filament::gltfio::ResourceLoader::BufferDescriptor(buffer.bytes, buffer.length));
 }
+
+- (void)addTextureProvider:(NSString *)mimeType :(TextureProvider *)provider{
+    nativeLoader->addTextureProvider([mimeType UTF8String], (filament::gltfio::TextureProvider*) provider.provider);
+}
 - (bool)asyncBeginLoad:(FilamentAsset *)asset{
     return nativeLoader->asyncBeginLoad( (filament::gltfio::FilamentAsset*) asset.asset);
 }

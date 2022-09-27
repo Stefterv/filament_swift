@@ -5,6 +5,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "../Filament/Engine.h"
+#import "TextureProvider.h"
 #import "FilamentAsset.h"
 
 #ifndef ResourceLoader_h
@@ -16,6 +17,7 @@ NS_SWIFT_NAME(ResourceLoader.Options)
 @property bool recomputeBoundingBoxes;
 @property bool ignoreBindTransform;
 @end
+
 
 NS_SWIFT_NAME(glTFIO.ResourceLoader)
 @interface ResourceLoader : NSObject
@@ -38,6 +40,9 @@ NS_SWIFT_NAME(glTFIO.ResourceLoader)
  * need to call this method.
  */
 - (void) addResourceData: (nonnull NSString*) uri :(nonnull NSData*) buffer;
+
+
+- (void) addTextureProvider: (nonnull NSString*) mimeType :(nonnull TextureProvider*) provider;
 - (bool) hasResourceData: (nonnull NSString*) uri;
 /**
  * Frees memory by evicting the URI cache that was populated via addResourceData.
