@@ -11,18 +11,17 @@ let package = Package(
     products: [
         .library(
             name: "filament",
-            targets: ["FilamentBindings", "Helpers"] + targets),
+            targets: ["Filament"]),
     ],
     targets: ([
         .target(
-            name: "Helpers",
-            dependencies: [
-                "FilamentBindings"
-            ],
+            name: "Filament",
+            dependencies: ["Bindings"],
             path: "Helpers"
         ),
         .target(
-            name: "FilamentBindings",
+            name: "Bindings",
+            dependencies: targets.map({ .byName(name: $0) }),
             path: "Bindings"
         )
     ] + targets.map({ .binaryTarget(name: $0, path: "lib/\($0).xcframework") })),

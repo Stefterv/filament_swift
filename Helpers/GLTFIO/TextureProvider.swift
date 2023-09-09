@@ -4,7 +4,7 @@
 //
 //  Created by Stef Tervelde on 27.09.22.
 //
-import FilamentBindings
+import Bindings
 
 extension TextureProvider{
     

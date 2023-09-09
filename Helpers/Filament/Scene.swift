@@ -3,7 +3,7 @@
 
 //  Created by Stef Tervelde on 05.07.22.
 //
-import FilamentBindings
+import Bindings
 
 extension Scene{
     public func addEntities(_ entities: [Entity]){

@@ -3,7 +3,7 @@
 //
 //  Created by Stef Tervelde on 14.07.22.
 //
-import FilamentBindings
+import Bindings
 
 extension TransformManager{
     public func setTransform(_ instance: EntityInstance, _ localTransform: simd_float4x4){

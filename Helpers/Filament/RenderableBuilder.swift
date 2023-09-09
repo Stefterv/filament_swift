@@ -3,7 +3,7 @@
 //
 //  Created by Stef Tervelde on 30.06.22.
 //
-import FilamentBindings
+import Bindings
 
 extension RenderableManager.Builder{
 //    public func geometry(index: Int32, type: PrimitiveType, vertices: VertexBuffer, indices: IndexBuffer, offset: Int32, count: Int32){

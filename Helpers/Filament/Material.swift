@@ -3,7 +3,7 @@
 
 //  Created by Stef Tervelde on 30.06.22.
 //
-import FilamentBindings
+import Bindings
 
 extension Material{
     public func setDefaultParameter(_ name: String, _ boolean: Bool){

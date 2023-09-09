@@ -3,7 +3,7 @@
 
 //  Created by Stef Tervelde on 05.07.22.
 //
-import FilamentBindings
+import Bindings
 extension Ktx1Loader{
 
 }

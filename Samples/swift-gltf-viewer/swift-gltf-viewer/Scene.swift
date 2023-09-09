@@ -7,8 +7,9 @@
 
 import SwiftUI
 import MetalKit
-import Filament
 import SceneKit
+
+import Filament
 
 class FilaSceneProps : ObservableObject{
     @Published var size = CGSize(width: 0, height: 0)
@@ -16,62 +17,62 @@ class FilaSceneProps : ObservableObject{
     let engine : Filament.Engine
     let renderer : Filament.Renderer
     var swapchain : Filament.SwapChain?
-    
+
 
     let materialProvider: glTFIO.MaterialProvider
     let assetLoader: glTFIO.AssetLoader
     let resourceLoader: glTFIO.ResourceLoader
-    
+
     let scene: Filament.Scene
     let view: Filament.View
-    
+
     let camera: Filament.Camera
-    
+
     var link: CADisplayLink?
     var uiview: UIView?
     init(){
         engine = Filament.Engine.create()
         renderer = engine.createRenderer()
-        
+
         scene = engine.createScene()
         view = engine.createView()
-        
+
         view.viewport = Viewport(left: 0, bottom: 0, width: 256, height: 256)
         let entManager = Utils.EntityManager.get()
-        
+
         camera = engine.createCamera(entManager.create())
-        
+
         view.scene = scene
         view.camera = camera
-        
+
         materialProvider = glTFIO.MaterialProvider.createUberShaderProvider(engine)
 
         let config = glTFIO.AssetLoader.Configuration()
         config.engine = engine
         config.materials = materialProvider
         config.entities = entManager
-        
+
         assetLoader = glTFIO.AssetLoader.create(config)
 
         let opt = glTFIO.ResourceLoader.Options()
         resourceLoader = glTFIO.ResourceLoader(engine, opt)
-        
-    
+
+
         let modelURL = Bundle.main.url(forResource: "Download", withExtension: ".glb")!
         guard let data = try? Data(contentsOf: modelURL) else { return }
-        
+
         guard let asset = assetLoader.createAsset(fromBinary: data) else { return }
         resourceLoader.loadResources(asset);
         let ents = asset.entities
         scene.addEntities(ents);
-        
+
         let sun = entManager.create();
         LightManager.Builder(.sun)
             .castShadows(true)
             .direction(simd_double3(0.0, -1.0, 0.0))
             .build(engine, sun)
 //        scene.addEntity(sun)
-        
+
         let iblURL = Bundle.main.url(forResource: "ibl", withExtension: ".ktx")!
         guard let iblData = try? Data(contentsOf: iblURL) else { return }
 
@@ -79,26 +80,26 @@ class FilaSceneProps : ObservableObject{
 
         let skbURL = Bundle.main.url(forResource: "skybox", withExtension: ".ktx")!
         guard let skbData = try? Data(contentsOf: skbURL) else { return }
-    
+
 
         let skybox = Ktx1Loader.createSkybox(engine, skbData, false)
         scene.skybox = skybox
-        
+
         let triangle = entManager.create()
         let mesh = createTriangleMesh();
         createRenderable(entity: triangle, mesh: mesh, material: nil)
         scene.addEntity(triangle)
     }
-    
+
     func createTriangleMesh() -> Mesh{
         let vertices: [Vertex] = [
             Vertex(x: -0.1, y: -0.1, z: 0.0, w: 1.0, u: 0.0, v: 1.0),
             Vertex(x: 0.3, y: -0.1, z: 0.0, w: 1.0, u: 2.0, v: 1.0),
             Vertex(x: -0.1, y: 0.3, z: 0.0, w: 1.0, u: 0, v: -1.0)
         ]
-        
+
         let indices: [Int] = [0,1,2];
-        
+
         return Mesh(vertices: vertices, indices: indices)
     }
     struct Vertex{
@@ -124,8 +125,8 @@ class FilaSceneProps : ObservableObject{
             vertexBuffer.setBufferAt(engine, 0, Data(bytes))
         }
         let indexBuffer = IndexBuffer.fromArray(mesh.indices, engine);
-        
-        
+
+
         RenderableManager.Builder(1)
             .geometry(0, .triangles, vertexBuffer, indexBuffer, 0, 3, engine)
             .receiveShadows(false)
@@ -133,7 +134,7 @@ class FilaSceneProps : ObservableObject{
             .culling(false)
             .build(engine, entity);
     }
-    
+
     func setClear(color: CIColor){
         let opt = Renderer.ClearOptions()
         opt.clearColor = color
@@ -146,7 +147,7 @@ class FilaSceneProps : ObservableObject{
         if let layer = view.layer as? CAMetalLayer{
             layer.pixelFormat = MTLPixelFormat.bgra8Unorm
             swapchain = engine.createSwapChain(layer)
-            
+
             link = CADisplayLink(target: self as Any, selector: #selector(renderloop));
             link?.add(to: RunLoop.current, forMode: .common)
         }
@@ -166,12 +167,12 @@ class FilaSceneProps : ObservableObject{
             let scale = UIScreen.main.nativeScale
             size = CGSize(width: newSize.width * scale, height: newSize.height * scale)
             layer.drawableSize = size
-            
+
             view.viewport = Viewport(left: 0, bottom: 0, width: Int32(size.width), height: Int32(size.height))
-            
+
             let origin = SCNNode()
             origin.position = SCNVector3(0, 1, 1)
-            
+
             // TODO: Move to own entity
             camera.setLensProjection(50, size.width/size.height, 0.01, 10)
             camera.lookAt(origin.simdPosition, SCNNode().simdPosition, SCNNode().simdWorldUp)
@@ -181,7 +182,7 @@ class FilaSceneProps : ObservableObject{
         guard let fileUrl: URL = Bundle.main.url(forResource: resource, withExtension: fileExt) else {
             return nil
         }
-        
+
         do {
             let rawData: Data = try Data(contentsOf: fileUrl)
             return [UInt8](rawData)
