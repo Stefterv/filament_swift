@@ -8,7 +8,7 @@
 #import "MaterialInstance.h"
 #import "VertexBuffer.h"
 #import "IndexBuffer.h"
-#import "../Utils/Entity.h"
+#import "Entity.h"
 
 #ifndef RenderableManager_h
 #define RenderableManager_h
@@ -16,7 +16,7 @@
 @interface RenderableManager : NSObject
 
 @property (nonatomic, readonly, nonnull) void* manager  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (nonnull void*) manager NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
+- (nonnull id) init: (nonnull void*) manager NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 typedef NS_ENUM(NSInteger, PrimitiveType) {
     PrimitiveTypePoints = 0,

@@ -16,7 +16,37 @@
     self->nativeAsset = (filament::gltfio::FilamentAsset*)asset;
     return self;
 }
++ (NSArray<NSNumber*>*)getEntitiesArray: (const void*) array :(unsigned long)count{
+    auto typedArray = (utils::Entity*) array;
+    auto target = [[NSMutableArray alloc] initWithCapacity:count];
+    for(auto i = 0; i<count; i++){
+        auto ent = typedArray[i];
+        auto num = utils::Entity::smuggle(ent);
+        target[i] = [[NSNumber alloc] initWithUnsignedInt: num];
+    }
+    return target;
+}
+- (NSArray<NSNumber *> *)getEntities{
+    auto ents = nativeAsset->getEntities();
+    auto count = nativeAsset->getEntityCount();
 
+    return [FilamentAsset getEntitiesArray:ents :count];
+}
+- (NSArray<NSNumber *> *)getLightEntities{
+    auto ents = nativeAsset->getLightEntities();
+    auto count = nativeAsset->getLightEntityCount();
+    return [FilamentAsset getEntitiesArray:ents :count];
+}
+- (NSArray<NSNumber *> *)getRenderableEntities{
+    auto ents = nativeAsset->getRenderableEntities();
+    auto count = nativeAsset->getRenderableEntityCount();
+    return [FilamentAsset getEntitiesArray:ents :count];
+}
+- (NSArray<NSNumber *> *)getCameraEntities{
+    auto ents = nativeAsset->getCameraEntities();
+    auto count = nativeAsset->getCameraEntityCount();
+    return [FilamentAsset getEntitiesArray:ents :count];
+}
 - (Entity)getRoot{
     return utils::Entity::smuggle(nativeAsset->getRoot());
 }
@@ -39,31 +69,25 @@
     return count;
     
 }
-+ (NSArray<NSNumber*>*)getEntitiesArray: (const void*) array :(unsigned long)count{
-    auto typedArray = (utils::Entity*) array;
-    auto target = [[NSMutableArray alloc] initWithCapacity:count];
+- (NSArray<NSString*>*)getResourceUris{
+    auto uris = nativeAsset->getResourceUris();
+    auto count = nativeAsset->getResourceUriCount();
+    auto result = [[NSMutableArray<NSString*> alloc] initWithCapacity:count];
     for(auto i = 0; i<count; i++){
-        auto ent = typedArray[i];
-        auto num = utils::Entity::smuggle(ent);
-        target[i] = [[NSNumber alloc] initWithUnsignedInt: num];
+        result[i] = [[NSString alloc] initWithUTF8String:uris[i]];
     }
-    return target;
+    return result;
 }
-- (NSArray<NSNumber *> *)getEntities{
-    auto ents = nativeAsset->getEntities();
-    auto count = nativeAsset->getEntityCount();
-    
-    return [FilamentAsset getEntitiesArray:ents :count];
+- (Box *)getBoundingBox{
+#warning ("Implement")
 }
-- (NSArray<NSNumber *> *)getRenderableEntities{
-    auto ents = nativeAsset->getRenderableEntities();
-    auto count = nativeAsset->getRenderableEntityCount();
-    return [FilamentAsset getEntitiesArray:ents :count];
+- (NSString *)getName:(Entity)entity{
+    auto name = nativeAsset->getName(utils::Entity::import(entity));
+    return [[NSString alloc] initWithUTF8String:name];
 }
-- (NSArray<NSNumber *> *)getCameraEntities{
-    auto ents = nativeAsset->getCameraEntities();
-    auto count = nativeAsset->getCameraEntityCount();
-    return [FilamentAsset getEntitiesArray:ents :count];
+- (Entity)getFirstEntityByName:(NSString *)name{
+    auto entity = nativeAsset->getFirstEntityByName([name UTF8String]);
+    return utils::Entity::smuggle(entity);
 }
 - (NSArray<NSNumber *> *)getEntitiesByName:(NSString *)name{
     auto count = nativeAsset->getEntitiesByName([name UTF8String], nil, 0);
@@ -77,27 +101,6 @@
     nativeAsset->getEntitiesByPrefix([name UTF8String], ents, count);
     return [FilamentAsset getEntitiesArray:ents :count];
 }
-- (Entity)getFirstEntityByName:(NSString *)name{
-    auto entity = nativeAsset->getFirstEntityByName([name UTF8String]);
-    return utils::Entity::smuggle(entity);
-}
-- (NSArray<MaterialInstance*>*)getMaterialInstances{
-    auto materials = nativeAsset->getMaterialInstances();
-    auto count = nativeAsset->getMaterialInstanceCount();
-    
-    auto result = [[NSMutableArray<MaterialInstance*> alloc] initWithCapacity:count];
-    for(auto i = 0; i<count; i++){
-        result[i] = [[MaterialInstance alloc] init:materials[i]];
-    }
-    return result;
-}
-- (Box *)getBoundingBox{
-    
-}
-- (NSString *)getName:(Entity)entity{
-    auto name = nativeAsset->getName(utils::Entity::import(entity));
-    return [[NSString alloc] initWithUTF8String:name];
-}
 - (NSString *)getExtras:(Entity)entity{
     auto name = nativeAsset->getExtras(utils::Entity::import(entity));
     if(name == nil){
@@ -105,42 +108,4 @@
     }
     return [[NSString alloc] initWithUTF8String:name];
 }
-- (Animator *)getAnimator{
-    return [[Animator alloc] init:nativeAsset->getAnimator()];
-}
-- (size_t)getSkinCount{
-    return nativeAsset->getSkinCount();
-}
-- (NSArray<NSString *> *)getSkinNames{
-    auto count = nativeAsset->getSkinCount();
-    auto result = [[NSMutableArray<NSString*> alloc] initWithCapacity:count];
-    for(auto i = 0; i<count; i++){
-        auto name = nativeAsset->getSkinNameAt(i);
-        result[i] = [[NSString alloc] initWithUTF8String:name];
-    }
-    return result;
-}
-- (NSArray<NSString*>*)getResourceUris{
-    auto uris = nativeAsset->getResourceUris();
-    auto count = nativeAsset->getResourceUriCount();
-    auto result = [[NSMutableArray<NSString*> alloc] initWithCapacity:count];
-    for(auto i = 0; i<count; i++){
-        result[i] = [[NSString alloc] initWithUTF8String:uris[i]];
-    }
-    return result;
-}
-- (NSArray<NSString*>*)getMaterialVariantNames{
-    auto count = nativeAsset->getMaterialVariantCount();
-    auto result = [[NSMutableArray<NSString*> alloc] initWithCapacity:count];
-    for(auto i = 0; i<count; i++){
-        auto name = nativeAsset->getMaterialVariantName(i);
-        result[i] = [[NSString alloc] initWithUTF8String:name];
-    }
-    return result;
-}
-- (void)applyMaterialVariant:(int)variantIndex{
-    nativeAsset->applyMaterialVariant(variantIndex);
-}
-
-
 @end

@@ -5,6 +5,8 @@
 //
 #import "Bindings/GLTFIO/FilamentInstance.h"
 #import <gltfio/FilamentInstance.h>
+#import "Bindings/GLTFIO/FilamentAsset.h"
+#import "Bindings/GLTFIO/Animator.h"
 
 @implementation FilamentInstance{
     filament::gltfio::FilamentInstance* nativeInstance;
@@ -17,7 +19,7 @@
 }
 
 - (FilamentAsset *)getAsset{
-    return [[FilamentAsset alloc] init:nativeInstance->getAsset()];
+    return [[FilamentAsset alloc] init: (void*)nativeInstance->getAsset()];
 }
 - (Entity)getRoot{
     auto entity = nativeInstance->getRoot();

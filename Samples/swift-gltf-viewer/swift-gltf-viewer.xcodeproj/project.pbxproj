@@ -10,16 +10,11 @@
 		179BA9B8D59D037EAFA199D1 /* GltfViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B361592413C5A70801CA0010 /* GltfViewer.swift */; };
 		3543A7FBA3042E6DA4069F69 /* Download.glb in Resources */ = {isa = PBXBuildFile; fileRef = 9005B470A2DC09FE34401EF5 /* Download.glb */; };
 		5C1F0B9C2AACA0C200F11761 /* filament in Frameworks */ = {isa = PBXBuildFile; productRef = 5C1F0B9B2AACA0C200F11761 /* filament */; };
-		5C31E0D828A65C6F00797B2F /* skybox.ktx in Resources */ = {isa = PBXBuildFile; fileRef = 5C31E0D628A65C6F00797B2F /* skybox.ktx */; };
-		5C31E0D928A65C6F00797B2F /* ibl.ktx in Resources */ = {isa = PBXBuildFile; fileRef = 5C31E0D728A65C6F00797B2F /* ibl.ktx */; };
 		AB9CAA04A74A6513D01EC1A3 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F2DE205970987D52AA1F5 /* Scene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		31BD9D238DA7682FF102BAE5 /* filament_swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = filament_swift; path = ../..; sourceTree = SOURCE_ROOT; };
-		5C1F0B9A2AAC997F00F11761 /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
-		5C31E0D628A65C6F00797B2F /* skybox.ktx */ = {isa = PBXFileReference; lastKnownFileType = file; path = skybox.ktx; sourceTree = "<group>"; };
-		5C31E0D728A65C6F00797B2F /* ibl.ktx */ = {isa = PBXFileReference; lastKnownFileType = file; path = ibl.ktx; sourceTree = "<group>"; };
 		712F2DE205970987D52AA1F5 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		891B249E0A448551F25056F8 /* swift-gltf-viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swift-gltf-viewer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9005B470A2DC09FE34401EF5 /* Download.glb */ = {isa = PBXFileReference; lastKnownFileType = file; path = Download.glb; sourceTree = "<group>"; };
@@ -50,8 +45,6 @@
 			isa = PBXGroup;
 			children = (
 				9005B470A2DC09FE34401EF5 /* Download.glb */,
-				5C31E0D728A65C6F00797B2F /* ibl.ktx */,
-				5C31E0D628A65C6F00797B2F /* skybox.ktx */,
 				0DAC08AB23A6F84F1C654839 /* Packages */,
 				512A1F1AD86AFFDFA206E368 /* swift-gltf-viewer */,
 				9DA23C60A227833DA2AA3584 /* Products */,
@@ -64,7 +57,6 @@
 			children = (
 				B361592413C5A70801CA0010 /* GltfViewer.swift */,
 				712F2DE205970987D52AA1F5 /* Scene.swift */,
-				5C1F0B9A2AAC997F00F11761 /* Engine.swift */,
 			);
 			path = "swift-gltf-viewer";
 			sourceTree = "<group>";
@@ -137,9 +129,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C31E0D928A65C6F00797B2F /* ibl.ktx in Resources */,
 				3543A7FBA3042E6DA4069F69 /* Download.glb in Resources */,
-				5C31E0D828A65C6F00797B2F /* skybox.ktx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

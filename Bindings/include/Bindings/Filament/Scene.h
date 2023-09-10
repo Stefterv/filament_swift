@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "Skybox.h"
 #import "IndirectLight.h"
-#import "../Utils/Entity.h"
+#import "Entity.h"
 
 #ifndef Scene_h
 #define Scene_h

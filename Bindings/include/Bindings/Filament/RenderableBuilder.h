@@ -10,7 +10,7 @@
 #import "MaterialInstance.h"
 #import "Box.h"
 #import "Engine.h"
-#import "../Utils/Entity.h"
+#import "Entity.h"
 
 #ifndef RenderableBuilder_h
 #define RenderableBuilder_h

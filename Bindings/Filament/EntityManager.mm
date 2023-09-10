@@ -5,7 +5,7 @@
 //  Created by Stef Tervelde on 29.06.22.
 //
 
-#import "Bindings/Utils/EntityManager.h"
+#import "Bindings/Filament/EntityManager.h"
 #import <utils/EntityManager.h>
 
 @implementation EntityManager{
