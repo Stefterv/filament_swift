@@ -5,6 +5,6 @@
 //
 import Bindings
 
-extension FilamatMaterialBuilder{
+extension FMaterialBuilder{
     
 }

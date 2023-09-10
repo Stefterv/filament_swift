@@ -17,6 +17,4 @@
     return self;
 }
 
-#warning("TODO")
-
 @end
