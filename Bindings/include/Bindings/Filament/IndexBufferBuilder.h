@@ -20,7 +20,7 @@ NS_SWIFT_NAME(IndexBuffer.Builder)
 @interface IndexBufferBuilder : NSObject
 
 @property (nonatomic, readonly, nonnull) void* buffer  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (nonnull void*) buffer NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
+- (nonnull id) init: (nonnull void*) buffer NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init;
 
 NS_ASSUME_NONNULL_BEGIN

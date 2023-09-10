@@ -232,7 +232,7 @@ typedef NS_ENUM(NSInteger,TextureUsage) {
 NS_SWIFT_NAME(Texture.PixelBufferDescriptor)
 @interface PixelBufferDescriptor : NSObject
 @property (nonatomic, readonly, nonnull) void* buffer  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (nonnull void*) buffer NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
+- (nonnull id) init: (nonnull void*) buffer NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 @end
 
@@ -261,7 +261,7 @@ NS_SWIFT_NAME(Texture.PixelBufferDescriptor)
 @interface Texture : NSObject
 
 @property (nonatomic, readonly, nonnull) void* texture  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (nonnull void*) texture NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
+- (nonnull id) init: (nonnull void*) texture NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 
 - (unsigned long) getWidth: (int) level;

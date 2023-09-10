@@ -15,7 +15,7 @@
 @interface ColorGradingBuilder : NSObject
 
 @property (nonatomic, readonly, nonnull) void* builder  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
-- (nonnull id) init: (nonnull void*) builder NS_SWIFT_UNAVAILABLE("Create a new renderer with engine.createRenderer");
+- (nonnull id) init: (nonnull void*) builder NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 
 NS_ASSUME_NONNULL_BEGIN
