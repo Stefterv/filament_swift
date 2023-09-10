@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, PrimitiveType) {
     PrimitiveTypeTriangles = 4,
     PrimitiveTypeTriangleStrip = 5
 };
-// TODO: Skinning & Morphing functions
+#warning("TODO: Skinning & Morphing functions")
 /**
  * Changes the bounding box used for frustum culling.
  *

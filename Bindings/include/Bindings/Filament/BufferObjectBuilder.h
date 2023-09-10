@@ -21,19 +21,20 @@ typedef NS_ENUM(NSInteger, BindingType) {
 - (nonnull id) init: (nonnull void*) Builder NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 
+NS_ASSUME_NONNULL_BEGIN
 /**
  * Size of the buffer in bytes.
  * @param byteCount Maximum number of bytes the BufferObject can hold.
  * @return A reference to this Builder for chaining calls.
  */
-- (nonnull instancetype) size: (uint32_t) byteCount;
+- (instancetype) size: (uint32_t) byteCount;
 
 /**
  * The binding type for this buffer object. (defaults to VERTEX)
  * @param BindingType Distinguishes between SSBO, VBO, etc. For now this must be VERTEX.
  * @return A reference to this Builder for chaining calls.
  */
-- (nonnull instancetype) bindingType: (BindingType) bindingType;
+- (instancetype) bindingType: (BindingType) bindingType;
 
 /**
  * Creates the BufferObject and returns a pointer to it. After creation, the buffer
@@ -50,8 +51,8 @@ typedef NS_ENUM(NSInteger, BindingType) {
  *
  * @see IndexBuffer::setBuffer
  */
-- (nullable BufferObject*) build :(nonnull Engine*) engine;
-
+- (BufferObject*) build :(nonnull Engine*) engine;
+NS_ASSUME_NONNULL_END
 
 @end
 

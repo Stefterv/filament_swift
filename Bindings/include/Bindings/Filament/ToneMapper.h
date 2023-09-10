@@ -13,7 +13,7 @@
 @property (nonatomic, readonly, nonnull) void* mapper  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");
 - (nonnull id) init: (nonnull void*) mapper NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
-
+#warning("TODO")
 @end
 
 

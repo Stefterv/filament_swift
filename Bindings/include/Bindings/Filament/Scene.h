@@ -54,6 +54,8 @@
 - (size_t) getRenderableCount;
 - (size_t) getLightCount;
 
+#warning("TODO Comments")
+
 @end
 
 

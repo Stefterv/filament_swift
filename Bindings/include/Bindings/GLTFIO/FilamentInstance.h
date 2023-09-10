@@ -27,7 +27,7 @@ NS_SWIFT_NAME(glTFIO.FilamentInstance)
 - (void) applyMaterialVariant: (size_t) index;
 
 + (nonnull NSArray<NSNumber*>*)getEntitiesArray: (nonnull const void*) array :(unsigned long)count;
-
+#warning("TODO Comments")
 @end
 
 

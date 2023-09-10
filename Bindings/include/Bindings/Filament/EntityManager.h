@@ -17,6 +17,8 @@ NS_SWIFT_NAME(Utils.EntityManager)
 - (nonnull id) init: (nonnull void*) manager NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 
+#warning("TODO Comments")
+
 - (Entity) create;
 - (void) destroy: (Entity) entity;
 - (bool) isAlive: (Entity) entity;
