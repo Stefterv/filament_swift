@@ -59,9 +59,8 @@
  */
 - (void) destroy: (Entity) e;
 
-#warning("TODO utils::FixedCapacityVector<CString> into swifty structure")
-//- (void) setMorphTargetNames: (EntityInstance) ci :(utils::FixedCapacityVector<CString>) names;
-//- (utils::FixedCapacityVector<CString>&) getMorphTargetNames: (Instance) ci;
+- (void) setMorphTargetNames: (EntityInstance) ci :(nonnull NSArray<NSString*>*) names;
+- (nonnull NSArray<NSString*>*) getMorphTargetNames: (EntityInstance) ci;
 
 - (void) setExtras: (EntityInstance) ci :(nonnull NSString*) extras;
 - (nonnull NSString*) getExtras: (EntityInstance) ci;

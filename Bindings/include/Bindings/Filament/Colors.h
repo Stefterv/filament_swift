@@ -17,6 +17,4 @@
 
 @end
 
-#warning("TODO")
-
 #endif /* Colors_h */

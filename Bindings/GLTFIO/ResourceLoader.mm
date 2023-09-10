@@ -5,11 +5,15 @@
 //
 #import "Bindings/GLTFIO/ResourceLoader.h"
 #import <gltfio/ResourceLoader.h>
+@implementation ResourceConfiguration
+
+@end
+
 @implementation ResourceLoader{
     filament::gltfio::ResourceLoader* nativeLoader;
 }
 
-- (nonnull id) init: (const ResourceConfiguration&) config{
+- (nonnull id) init: (ResourceConfiguration*) config{
     auto _config = filament::gltfio::ResourceConfiguration();
     _config.engine = (filament::Engine*) config.engine.engine;
     _config.normalizeSkinningWeights = config.normalizeSkinningWeights;

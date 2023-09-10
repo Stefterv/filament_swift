@@ -38,7 +38,7 @@ class FilaSceneProps : ObservableObject{
         view = engine.createView()
 
         view.viewport = Viewport(left: 0, bottom: 0, width: 256, height: 256)
-        let entManager = Utils.EntityManager.get()
+        let entManager = EntityManager.get()
 
         camera = engine.createCamera(entManager.create())
 
@@ -54,14 +54,15 @@ class FilaSceneProps : ObservableObject{
 
         assetLoader = glTFIO.AssetLoader.create(config)
 
-        let opt = glTFIO.ResourceLoader.Options()
-        resourceLoader = glTFIO.ResourceLoader(engine, opt)
+        let opt = glTFIO.ResourceConfiguration()
+        opt.engine = engine
+        resourceLoader = glTFIO.ResourceLoader(opt)
 
 
         let modelURL = Bundle.main.url(forResource: "Download", withExtension: ".glb")!
         guard let data = try? Data(contentsOf: modelURL) else { return }
 
-        guard let asset = assetLoader.createAsset(fromBinary: data) else { return }
+        guard let asset = assetLoader.createAsset(data) else { return }
         resourceLoader.loadResources(asset);
         let ents = asset.entities
         scene.addEntities(ents);

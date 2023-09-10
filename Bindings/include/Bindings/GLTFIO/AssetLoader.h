@@ -13,6 +13,19 @@
 #ifndef AssetLoader_h
 #define AssetLoader_h
 
+
+
+NS_SWIFT_NAME(AssetLoader.Configuration)
+@interface Configuration : NSObject
+@property (nonnull) Engine* engine;
+@property (nonnull) MaterialProvider* materials;
+@property (nullable) EntityManager* entities;
+@property (nullable) NameComponentManager* names;
+@end
+
+
+
+
 /**
  * Consumes a blob of glTF 2.0 content (either JSON or GLB) and produces a {@link FilamentAsset}
  * object, which is a bundle of Filament entities, material instances, textures, vertex buffers,
@@ -25,16 +38,6 @@
  * @see FilamentAsset
  * @see ResourceLoader
  */
-
-NS_SWIFT_NAME(AssetLoader.Configuration)
-@interface AssetConfiguration : NSObject
-@property (nonnull) Engine* engine;
-@property (nonnull) MaterialProvider* materials;
-@property (nullable) EntityManager* entities;
-@property (nullable) NameComponentManager* names;
-
-@end
-
 NS_SWIFT_NAME(glTFIO.AssetLoader)
 @interface AssetLoader : NSObject
 
@@ -42,10 +45,27 @@ NS_SWIFT_NAME(glTFIO.AssetLoader)
 - (nonnull id) init: (nonnull void*) loader NS_SWIFT_UNAVAILABLE("Instances are created internally");
 - (nonnull id) init NS_UNAVAILABLE;
 
-+ (nonnull instancetype) create: (nonnull AssetConfiguration*) config;
-
-- (nullable FilamentAsset*) createAssetFromJson: (nonnull NSData*) bytes;
-- (nullable FilamentAsset*) createAssetFromBinary: (nonnull NSData*) bytes;
+/**
+ * Creates an asset loader for the given configuration, which specifies the Filament engine.
+ *
+ * The engine is held weakly, used only for the creation and destruction of Filament objects.
+ * The optional name component manager can be used to assign names to renderables.
+ * The material source specifies whether to use filamat to generate materials on the fly, or to
+ * load a small set of precompiled ubershader materials.
+ */
++ (nonnull instancetype) create: (nonnull Configuration*) config;
+/**
+ * Frees the loader.
+ *
+ * This does not not automatically free the cache of materials, nor
+ * does it free the entities for created assets (see destroyAsset).
+ */
++ (void) destroy:(nonnull AssetLoader*) loader;
+/**
+ * Takes a pointer to the contents of a GLB or a JSON-based glTF 2.0 file and returns an asset
+ * with one instance, or null on failure.
+ */
+- (nullable FilamentAsset*) createAsset: (nonnull NSData*) bytes;
 /**
  * Consumes the contents of a glTF 2.0 file and produces a primary asset with one or more
  * instances. The primary asset has ownership over the instances.
@@ -87,6 +107,10 @@ NS_SWIFT_NAME(glTFIO.AssetLoader)
  */
 - (nullable FilamentInstance*) createInstance: (nonnull FilamentAsset*) primary;
 /**
+ * Allows clients to enable diagnostic shading on newly-loaded assets.
+ */
+- (void) enableDiagnostics: (bool) enable;
+/**
  * Destroys the given asset and all of its associated Filament objects.
  *
  * This destroys entities, components, material instances, vertex buffers, index buffers,
@@ -95,6 +119,11 @@ NS_SWIFT_NAME(glTFIO.AssetLoader)
  */
 - (void) destroyAsset: (nonnull FilamentAsset*) asset;
 
+/**
+ * Gets a weak reference to an array of cached materials, used internally to create material
+ * instances for assets.
+ */
+- (nonnull NSArray<Material*>*) getMaterials;
 
 @end
 

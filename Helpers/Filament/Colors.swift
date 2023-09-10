@@ -4,7 +4,7 @@
 //
 //  Created by Stef Tervelde on 10.09.23.
 //
-import FilamentBindings
+import Bindings
 
 extension Colors{
     

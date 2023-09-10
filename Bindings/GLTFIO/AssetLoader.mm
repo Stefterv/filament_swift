@@ -6,7 +6,7 @@
 #import "Bindings/GLTFIO/AssetLoader.h"
 #import <gltfio/AssetLoader.h>
 
-@implementation AssetConfiguration
+@implementation Configuration
 
 
 
@@ -21,7 +21,7 @@
     self->nativeLoader = (filament::gltfio::AssetLoader*)loader;
     return self;
 }
-+ (instancetype)create:(AssetConfiguration *)config1{
++ (instancetype)create:(Configuration *)config1{
     auto config2 = filament::gltfio::AssetConfiguration();
     config2.engine = (filament::Engine*) config1.engine.engine;
     config2.entities = (utils::EntityManager*) config1.entities.manager;
@@ -31,16 +31,11 @@
     return [[AssetLoader alloc] init:loader];
 }
 
-- (FilamentAsset *)createAssetFromBinary:(NSData*)bytes{
-    auto asset = nativeLoader->createAssetFromBinary((uint8_t*)bytes.bytes, (uint32_t)bytes.length);
+- (FilamentAsset *)createAsset:(NSData*)bytes{
+    auto asset = nativeLoader->createAsset((uint8_t*)bytes.bytes, (uint32_t)bytes.length);
     return [[FilamentAsset alloc] init:asset];
 }
 
-- (FilamentAsset *)createAssetFromJson:(NSData*)bytes{
-    auto asset = nativeLoader->createAssetFromJson((uint8_t*)bytes.bytes, (uint32_t)bytes.length);
-    
-    return [[FilamentAsset alloc] init:asset];
-}
 
 - (FilamentInstance *)createInstance:(FilamentAsset *)primary{
     auto instance = nativeLoader->createInstance((filament::gltfio::FilamentAsset*) primary.asset);

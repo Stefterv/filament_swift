@@ -12,11 +12,11 @@
 #define ResourceLoader_h
 
 NS_SWIFT_NAME(glTFIO.ResourceConfiguration)
-typedef struct{
-    Engine* _Nonnull  engine;
-    NSString* _Nonnull path;
-    bool normalizeSkinningWeights;
-} ResourceConfiguration;
+@interface ResourceConfiguration : NSObject
+@property (nonnull) Engine* engine;
+@property (nonnull) NSString* path;
+@property (nonnull) bool* normalizeSkinningWeights;
+@end
 
 
 NS_SWIFT_NAME(glTFIO.ResourceLoader)
