@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,19 +11,26 @@ let package = Package(
     products: [
         .library(
             name: "filament",
-            targets: ["Filament"]),
+            targets: ["Filament"]
+        ),
     ],
     targets: ([
         .target(
             name: "Filament",
-            dependencies: ["Bindings"],
-            path: "Helpers"
-        ),
-        .target(
-            name: "Bindings",
-            dependencies: targets.map({ .byName(name: $0) }),
-            path: "Bindings"
+            dependencies: targets.map({ .byName(name: $0 )}),
+            path: "headers",
+            swiftSettings: [.interoperabilityMode(.Cxx)]
         )
-    ] + targets.map({ .binaryTarget(name: $0, path: "lib/\($0).xcframework") })),
-    cxxLanguageStandard: .cxx17
+//        .target(
+//            name: "Filament",
+//            dependencies: ["Bindings"],
+//            path: "Helpers"
+//        ),
+//        .target(
+//            name: "Bindings",
+//            dependencies: targets.map({ .byName(name: $0) }),
+//            path: "Bindings"
+//        )
+    ] + targets.map({ .binaryTarget(name: $0, path: "lib/\($0).xcframework") }))
+//    cxxLanguageStandard: .gnucxx20,
 )

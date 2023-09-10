@@ -17,7 +17,6 @@
 
 /* Begin PBXFileReference section */
 		31BD9D238DA7682FF102BAE5 /* filament_swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = filament_swift; path = ../..; sourceTree = SOURCE_ROOT; };
-		5C1F0B9A2AAC997F00F11761 /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
 		5C31E0D628A65C6F00797B2F /* skybox.ktx */ = {isa = PBXFileReference; lastKnownFileType = file; path = skybox.ktx; sourceTree = "<group>"; };
 		5C31E0D728A65C6F00797B2F /* ibl.ktx */ = {isa = PBXFileReference; lastKnownFileType = file; path = ibl.ktx; sourceTree = "<group>"; };
 		712F2DE205970987D52AA1F5 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
@@ -64,7 +63,6 @@
 			children = (
 				B361592413C5A70801CA0010 /* GltfViewer.swift */,
 				712F2DE205970987D52AA1F5 /* Scene.swift */,
-				5C1F0B9A2AAC997F00F11761 /* Engine.swift */,
 			);
 			path = "swift-gltf-viewer";
 			sourceTree = "<group>";
