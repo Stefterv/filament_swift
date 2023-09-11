@@ -13,7 +13,7 @@ extension Scene{
     }
     public func removeEntities(_ entities: [Entity]){
         for entity in entities{
-            removeEntity(entity)
+            remove(entity)
         }
     }
     public var skybox: Skybox?{

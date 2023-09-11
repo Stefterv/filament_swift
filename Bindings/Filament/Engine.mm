@@ -7,6 +7,7 @@
 #import "Bindings/Filament/Engine.h"
 #import <filament/Engine.h>
 #import <utils/Entity.h>
+#import "Bindings/Filament/RenderableManager.h"
 
 @implementation Engine{
     filament::Engine* nativeEngine;

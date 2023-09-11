@@ -12,19 +12,13 @@
 #import <filament/Viewport.h>
 #import "../Math.h"
 
-#warning("TODO")
 @implementation ClearOptions
-
 @end
 
 @implementation DisplayInfo
-
-
 @end
 
 @implementation FrameRateOptions
-
-
 @end
 
 @implementation Renderer{
@@ -73,8 +67,8 @@
 - (void)renderStandaloneView:(View *)view{
     nativeRenderer->renderStandaloneView( (filament::View*) view.view);
 }
-- (void)copyFrame:(SwapChain *)dstSwapChain :(Viewport *)dstViewport :(Viewport *)srcViewport :(int)flags{
-    nativeRenderer->copyFrame( (filament::SwapChain*) dstSwapChain.swapchain, FILAMENT_VIEWPORT(dstViewport), FILAMENT_VIEWPORT(srcViewport));
+- (void)copyFrame:(SwapChain *)dstSwapChain :(Viewport)dstViewport :(Viewport)srcViewport :(int)flags{
+    nativeRenderer->copyFrame((filament::SwapChain*) dstSwapChain.swapchain, filament::Viewport(dstViewport.left, dstViewport.bottom, dstViewport.width, dstViewport.height), filament::Viewport(srcViewport.left, srcViewport.bottom, srcViewport.width, srcViewport.height));
 }
 - (void)readPixels:(int)xoffset :(int)yoffset :(int)width :(int)height :(NSData *)buffer{
 #warning Return Pixel data

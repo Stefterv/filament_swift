@@ -17,13 +17,11 @@
 #ifndef Renderer_h
 #define Renderer_h
 
-#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.DisplayInfo)
 @interface DisplayInfo : NSObject
 @property double refreshRate;
 @end
 
-#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.FrameRateOptions)
 @interface FrameRateOptions : NSObject
 @property double interval;
@@ -32,7 +30,6 @@ NS_SWIFT_NAME(Renderer.FrameRateOptions)
 @property double history;
 @end
 
-#warning Replace with Struct
 NS_SWIFT_NAME(Renderer.ClearOptions)
 @interface ClearOptions : NSObject
 @property CIColor*_Nonnull clearColor;
@@ -221,7 +218,7 @@ NS_SWIFT_NAME(Renderer.ClearOptions)
  * @param srcViewport the source rectangle to be copied
  * @param flags one or more <code>CopyFrameFlag</code> behavior configuration flags
  */
-- (void) copyFrame: (nonnull SwapChain*) dstSwapChain :(nonnull Viewport*) dstViewport :(nonnull Viewport*) srcViewport :(int) flags;
+- (void) copyFrame: (nonnull SwapChain*) dstSwapChain :(Viewport) dstViewport :(Viewport) srcViewport :(int) flags;
 /**
  * Reads back the content of the {@link SwapChain} associated with this <code>Renderer</code>.
  *

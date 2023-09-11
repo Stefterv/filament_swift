@@ -3,10 +3,10 @@
 //
 //  Created by Stef Tervelde on 30.06.22.
 //
-#import "Bindings/Filament/MorphTarget.h"
+#import "Bindings/Filament/MorphTargetBuffer.h"
 #import <filament/MorphTargetBuffer.h>
 
-@implementation MorphTarget{
+@implementation MorphTargetBuffer{
     filament::MorphTargetBuffer* nativeBuffer;
 }
 

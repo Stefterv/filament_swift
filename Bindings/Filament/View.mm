@@ -35,12 +35,12 @@
 - (Camera *)getCamera{
     return [[Camera alloc] init: &nativeView->getCamera()];
 }
-- (void)setViewport:(Viewport*)viewport{
-    nativeView->setViewport(FILAMENT_VIEWPORT(viewport));
+- (void)setViewport:(Viewport)viewport{
+    nativeView->setViewport(filament::Viewport(viewport.left, viewport.bottom, viewport.width, viewport.height));
 }
-- (Viewport *)getViewport{
+- (Viewport)getViewport{
     auto vp1 = nativeView->getViewport();
-    auto vp2 = [[Viewport alloc] init];
+    auto vp2 = Viewport();
     vp2.left = vp1.left;
     vp2.bottom = vp1.bottom;
     vp2.width = vp2.width;
@@ -82,62 +82,62 @@
     return (AntiAliasing) nativeView->getAntiAliasing();
 }
 
-- (void)setAmbientOcclusionOptions:(AmbientOcclusionOptions)options{
-    nativeView->setAmbientOcclusionOptions({
-        .radius=options.radius,
-        .power=options.power,
-        .bias=options.bias,
-        .resolution=options.resolution,
-        .intensity=options.intensity,
-        .bilateralThreshold=options.bilateralThreshold,
-        .quality=(filament::QualityLevel)options.quality,
-        .lowPassFilter=(filament::QualityLevel)options.lowPassFilter,
-        .upsampling=(filament::QualityLevel)options.upsampling,
-        .enabled=options.enabled,
-        .bentNormals=options.bentNormals,
-        .minHorizonAngleRad=options.minHorizonAngleRad,
-        .ssct={
-            .lightConeRad=options.ssct.lightConeRad,
-            .shadowDistance=options.ssct.shadowDistance,
-            .contactDistanceMax=options.ssct.contactDistanceMax,
-            .intensity=options.ssct.intensity,
-            .lightDirection=*(filament::math::float3*)&options.ssct.lightDirection,
-            .depthBias=options.ssct.depthBias,
-            .depthSlopeBias=options.ssct.depthSlopeBias,
-            .sampleCount=options.ssct.sampleCount,
-            .rayCount=options.ssct.rayCount,
-            .enabled=options.ssct.enabled
-        }
-    });
-}
-- (AmbientOcclusionOptions)getAmbientOcclusionOptions{
-    auto options = nativeView->getAmbientOcclusionOptions();
-    return {
-        .radius=options.radius,
-        .power=options.power,
-        .bias=options.bias,
-        .resolution=options.resolution,
-        .intensity=options.intensity,
-        .bilateralThreshold=options.bilateralThreshold,
-        .quality=(QualityLevel)options.quality,
-        .lowPassFilter=(QualityLevel)options.lowPassFilter,
-        .upsampling=(QualityLevel)options.upsampling,
-        .enabled=options.enabled,
-        .bentNormals=options.bentNormals,
-        .minHorizonAngleRad=options.minHorizonAngleRad,
-        .ssct={
-            .lightConeRad=options.ssct.lightConeRad,
-            .shadowDistance=options.ssct.shadowDistance,
-            .contactDistanceMax=options.ssct.contactDistanceMax,
-            .intensity=options.ssct.intensity,
-            .lightDirection=*(simd_float3*)&options.ssct.lightDirection,
-            .depthBias=options.ssct.depthBias,
-            .depthSlopeBias=options.ssct.depthSlopeBias,
-            .sampleCount=options.ssct.sampleCount,
-            .rayCount=options.ssct.rayCount,
-            .enabled=options.ssct.enabled
-        }
-    };
-}
+//- (void)setAmbientOcclusionOptions:(AmbientOcclusionOptions)options{
+//    nativeView->setAmbientOcclusionOptions({
+//        .radius=options.radius,
+//        .power=options.power,
+//        .bias=options.bias,
+//        .resolution=options.resolution,
+//        .intensity=options.intensity,
+//        .bilateralThreshold=options.bilateralThreshold,
+//        .quality=(filament::QualityLevel)options.quality,
+//        .lowPassFilter=(filament::QualityLevel)options.lowPassFilter,
+//        .upsampling=(filament::QualityLevel)options.upsampling,
+//        .enabled=options.enabled,
+//        .bentNormals=options.bentNormals,
+//        .minHorizonAngleRad=options.minHorizonAngleRad,
+//        .ssct={
+//            .lightConeRad=options.ssct.lightConeRad,
+//            .shadowDistance=options.ssct.shadowDistance,
+//            .contactDistanceMax=options.ssct.contactDistanceMax,
+//            .intensity=options.ssct.intensity,
+//            .lightDirection=*(filament::math::float3*)&options.ssct.lightDirection,
+//            .depthBias=options.ssct.depthBias,
+//            .depthSlopeBias=options.ssct.depthSlopeBias,
+//            .sampleCount=options.ssct.sampleCount,
+//            .rayCount=options.ssct.rayCount,
+//            .enabled=options.ssct.enabled
+//        }
+//    });
+//}
+//- (AmbientOcclusionOptions)getAmbientOcclusionOptions{
+//    auto options = nativeView->getAmbientOcclusionOptions();
+//    return {
+//        .radius=options.radius,
+//        .power=options.power,
+//        .bias=options.bias,
+//        .resolution=options.resolution,
+//        .intensity=options.intensity,
+//        .bilateralThreshold=options.bilateralThreshold,
+//        .quality=(QualityLevel)options.quality,
+//        .lowPassFilter=(QualityLevel)options.lowPassFilter,
+//        .upsampling=(QualityLevel)options.upsampling,
+//        .enabled=options.enabled,
+//        .bentNormals=options.bentNormals,
+//        .minHorizonAngleRad=options.minHorizonAngleRad,
+//        .ssct={
+//            .lightConeRad=options.ssct.lightConeRad,
+//            .shadowDistance=options.ssct.shadowDistance,
+//            .contactDistanceMax=options.ssct.contactDistanceMax,
+//            .intensity=options.ssct.intensity,
+//            .lightDirection=*(simd_float3*)&options.ssct.lightDirection,
+//            .depthBias=options.ssct.depthBias,
+//            .depthSlopeBias=options.ssct.depthSlopeBias,
+//            .sampleCount=options.ssct.sampleCount,
+//            .rayCount=options.ssct.rayCount,
+//            .enabled=options.ssct.enabled
+//        }
+//    };
+//}
 
 @end

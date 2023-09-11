@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, AlphaMode) {
     AlphaModeBlend
 };
 
-#warning("TODO Struct")
+#warning("gltfIO TODO")
 NS_SWIFT_NAME(MaterialProvider.MaterialKey)
 @interface MaterialKey : NSObject
 @property bool unlit;

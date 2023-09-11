@@ -3,10 +3,10 @@
 
 //  Created by Stef Tervelde on 30.06.22.
 //
-#import "Bindings/Filament/MorphTargetBuilder.h"
+#import "Bindings/Filament/MorphTargetBufferBuilder.h"
 #import <filament/MorphTargetBuffer.h>
 
-@implementation MorphTargetBuilder{
+@implementation MorphTargetBufferBuilder{
     filament::MorphTargetBuffer::Builder* nativeBuilder;
 }
 

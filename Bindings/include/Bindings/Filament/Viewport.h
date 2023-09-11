@@ -8,15 +8,13 @@
 #ifndef Viewport_h
 #define Viewport_h
 
-#warning Replace with Struct
-@interface Viewport : NSObject
-@property int left;
-@property int bottom;
-@property int width;
-@property int height;
+typedef struct{
+    int left;
+    int bottom;
+    int width;
+    int height;
+} Viewport;
 
-@end
-
-#define FILAMENT_VIEWPORT(dstViewport) (filament::Viewport(dstViewport.left, dstViewport.bottom, dstViewport.width, dstViewport.height))
+//#define FILAMENT_VIEWPORT(dstViewport) (filament::Viewport(dstViewport.left, dstViewport.bottom, dstViewport.width, dstViewport.height))
 
 #endif /* Viewport_h */
