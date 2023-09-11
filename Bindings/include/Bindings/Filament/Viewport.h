@@ -15,6 +15,4 @@ typedef struct{
     int height;
 } Viewport;
 
-//#define FILAMENT_VIEWPORT(dstViewport) (filament::Viewport(dstViewport.left, dstViewport.bottom, dstViewport.width, dstViewport.height))
-
 #endif /* Viewport_h */

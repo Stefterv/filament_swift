@@ -47,11 +47,15 @@
     auto length = (uint32_t) buffer.length;
     
     auto bundle = new ktxreader::Ktx1Bundle(bytes, length);
-    
-    auto texture = ktxreader::Ktx1Reader::createTexture(nEngine, bundle, srgb);
+    const auto deleter = [](void* userdata) {
+        auto* bundle = (ktxreader::Ktx1Bundle*) userdata;
+        delete bundle;
+    };
+    auto texture = ktxreader::Ktx1Reader::createTexture(nEngine, *bundle, srgb, deleter, bundle);
     
     auto skybox = filament::Skybox::Builder()
         .environment(texture)
+        .showSun(true)
         .build(*nEngine);
     
     return [[Skybox alloc] init: skybox];

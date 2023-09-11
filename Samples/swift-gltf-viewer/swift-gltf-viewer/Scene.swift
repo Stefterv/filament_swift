@@ -27,6 +27,7 @@ class FilaSceneProps : ObservableObject{
     let view: Filament.View
 
     let camera: Filament.Camera
+    let camEntity: Entity
 
     var link: CADisplayLink?
     var uiview: UIView?
@@ -37,10 +38,10 @@ class FilaSceneProps : ObservableObject{
         scene = engine.createScene()
         view = engine.createView()
 
-        view.viewport = Viewport(left: 0, bottom: 0, width: 256, height: 256)
         let entManager = EntityManager.get()
 
-        camera = engine.createCamera(entManager.create())
+        camEntity = entManager.create()
+        camera = engine.createCamera(camEntity)
 
         view.scene = scene
         view.camera = camera
@@ -72,76 +73,17 @@ class FilaSceneProps : ObservableObject{
             .castShadows(true)
             .direction(simd_double3(0.0, -1.0, 0.0))
             .build(engine, sun)
-//        scene.addEntity(sun)
+        scene.addEntity(sun)
 
         let iblURL = Bundle.main.url(forResource: "ibl", withExtension: ".ktx")!
         guard let iblData = try? Data(contentsOf: iblURL) else { return }
-
-        scene.setIndirectLight(Ktx1Loader.createIndirectLight(engine, iblData, false))
-
+        
         let skbURL = Bundle.main.url(forResource: "skybox", withExtension: ".ktx")!
         guard let skbData = try? Data(contentsOf: skbURL) else { return }
 
+        scene.setIndirectLight(Ktx1Loader.createIndirectLight(engine, iblData, false))
 
-        let skybox = Ktx1Loader.createSkybox(engine, skbData, false)
-        scene.skybox = skybox
-
-        let triangle = entManager.create()
-        let mesh = createTriangleMesh();
-        createRenderable(entity: triangle, mesh: mesh, material: nil)
-        scene.addEntity(triangle)
-    }
-
-    func createTriangleMesh() -> Mesh{
-        let vertices: [Vertex] = [
-            Vertex(x: -0.1, y: -0.1, z: 0.0, w: 1.0, u: 0.0, v: 1.0),
-            Vertex(x: 0.3, y: -0.1, z: 0.0, w: 1.0, u: 2.0, v: 1.0),
-            Vertex(x: -0.1, y: 0.3, z: 0.0, w: 1.0, u: 0, v: -1.0)
-        ]
-
-        let indices: [Int] = [0,1,2];
-
-        return Mesh(vertices: vertices, indices: indices)
-    }
-    struct Vertex{
-        let x: Float
-        let y: Float
-        let z: Float
-        let w: Float
-        let u: Float
-        let v: Float
-    }
-    struct Mesh{
-        var vertices: [Vertex]
-        var indices: [Int]
-    }
-    func createRenderable(entity: Entity, mesh: Mesh, material: MaterialInstance?){
-        let vertexBuffer = VertexBuffer.Builder()
-            .vertexCount(mesh.vertices.count)
-            .bufferCount(1)
-            .attribute(.position, 0, .float4, 0, 24)
-            .attribute(.uv0, 0, .float2, 16, 24)
-            .build(engine)
-        mesh.vertices.withUnsafeBytes{ bytes in
-            vertexBuffer.setBufferAt(engine, 0, Data(bytes))
-        }
-        let indexBuffer = IndexBuffer.fromArray(mesh.indices, engine);
-
-
-        RenderableManager.Builder(1)
-            .geometry(0, .triangles, vertexBuffer, indexBuffer, 0, 3, engine)
-            .receiveShadows(false)
-            .castShadows(false)
-            .culling(false)
-            .build(engine, entity);
-    }
-
-    func setClear(color: CIColor){
-        let opt = Renderer.ClearOptions()
-        opt.clearColor = color
-        opt.clear = true
-        opt.discard = true
-        renderer.setClearOptions(opt)
+        scene.skybox = Ktx1Loader.createSkybox(engine, skbData, false)
     }
     func setupSwapchain(_ view: UIView){
         uiview = view
@@ -157,6 +99,11 @@ class FilaSceneProps : ObservableObject{
         guard let swapchain = swapchain else {
             return
         }
+        let origin = SCNNode()
+        origin.position = SCNVector3(0, 0.5, 0.5)
+        
+        camera.setLensProjection(28, size.width/size.height, 0.05, 1000.0)
+        camera.lookAt(origin.simdPosition, SCNNode().simdPosition, SCNNode().simdWorldUp)
 
         if(renderer.beginFrame(swapchain)){
             renderer.render(view);
@@ -170,25 +117,6 @@ class FilaSceneProps : ObservableObject{
             layer.drawableSize = size
 
             view.viewport = Viewport(left: 0, bottom: 0, width: Int32(size.width), height: Int32(size.height))
-
-            let origin = SCNNode()
-            origin.position = SCNVector3(0, 1, 1)
-
-            // TODO: Move to own entity
-            camera.setLensProjection(50, size.width/size.height, 0.01, 10)
-            camera.lookAt(origin.simdPosition, SCNNode().simdPosition, SCNNode().simdWorldUp)
-        }
-    }
-    static func getFile(forResource resource: String, withExtension fileExt: String?) -> [UInt8]? {
-        guard let fileUrl: URL = Bundle.main.url(forResource: resource, withExtension: fileExt) else {
-            return nil
-        }
-
-        do {
-            let rawData: Data = try Data(contentsOf: fileUrl)
-            return [UInt8](rawData)
-        } catch {
-            return nil
         }
     }
 }
@@ -208,7 +136,6 @@ struct FilaScene<Content: SwiftUI.View>: SwiftUI.View {
             .overlay(GeometryReader{ reader in Spacer().onAppear{ state.resize(reader.size) }.onChange(of: reader.size){ state.resize($0) } }.ignoresSafeArea())
             .background(FilaSceneMetalLayer().ignoresSafeArea())
             .environmentObject(state)
-            .task(id: colorScheme){ state.setClear(color: colorScheme == .light ? .white : .black) }
     }
 }
 

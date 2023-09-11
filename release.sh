@@ -11,10 +11,12 @@ else
 fi
 git -C filament checkout tags/v${VERSION}
 
-filament/build.sh -p ios -s release
+filament/build.sh -p ios -i debug
 
-LEADER_PATH="filament/out/ios-release/filament/lib/arm64"
+LEADER_PATH="filament/out/ios-debug/filament/lib/arm64"
 OUTPUT_DIR="lib/"
+
+rm -rf "${OUTPUT_DIR}"
 
 # Loop through each file in the leader path. For each library we find, we'll collect additional
 # architectures in the other paths and combine them all into a universal library.

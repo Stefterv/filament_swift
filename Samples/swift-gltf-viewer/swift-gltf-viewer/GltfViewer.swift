@@ -8,11 +8,12 @@ import SwiftUI
 
 @main
 struct GltfViewer: App{
-    var body: some SwiftUI.Scene{
+    var body: some Scene{
         WindowGroup{
             FilaScene(){
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
             }
             .ignoresSafeArea()
         }
