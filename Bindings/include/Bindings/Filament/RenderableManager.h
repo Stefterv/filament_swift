@@ -81,7 +81,7 @@ typedef NS_ENUM(NSInteger, PrimitiveType) {
  * @see Builder#boundingBox
  * @see RenderableManager#getAxisAlignedBoundingBox
  */
-- (void) setAxisAlignedBoundingBox: (EntityInstance) instance :(nonnull Box*) aabb;
+- (void) setAxisAlignedBoundingBox: (EntityInstance) instance :(Box) aabb;
 /**
  * Changes the visibility bits.
  *
@@ -210,7 +210,7 @@ typedef NS_ENUM(NSInteger, PrimitiveType) {
 /**
  * Get a MorphTargetBuffer to the given primitive or null if it doesn't exist.
  */
-- (nonnull MorphTargetBuffer*) getMorphTargetBufferAt: (EntityInstance) instance :(uint8_t) level :(size_t) primitiveIndex;
+- (nullable MorphTargetBuffer*) getMorphTargetBufferAt: (EntityInstance) instance :(uint8_t) level :(size_t) primitiveIndex;
 
 /**
  * Gets the number of morphing in the given entity.
@@ -222,7 +222,7 @@ typedef NS_ENUM(NSInteger, PrimitiveType) {
  * \see Builder::boundingBox()
  * \see RenderableManager::setAxisAlignedBoundingBox()
  */
-- (nonnull Box*) getAxisAlignedBoundingBox: (EntityInstance) instance;
+- (Box) getAxisAlignedBoundingBox: (EntityInstance) instance;
 /**
  * Get the visibility bits.
  *
@@ -282,7 +282,7 @@ typedef NS_ENUM(NSInteger, PrimitiveType) {
 /**
  * Retrieves the set of enabled attribute slots in the given primitive's VertexBuffer.
  */
-- (nonnull NSMutableData*) getEnabledAttributesAt: (EntityInstance) instance :(size_t) primitiveIndex;
+- (u_int32_t) getEnabledAttributesAt: (EntityInstance) instance :(size_t) primitiveIndex;
 @end
 
 

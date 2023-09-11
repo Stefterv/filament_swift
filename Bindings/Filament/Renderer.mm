@@ -70,12 +70,15 @@
 - (void)copyFrame:(SwapChain *)dstSwapChain :(Viewport)dstViewport :(Viewport)srcViewport :(int)flags{
     nativeRenderer->copyFrame((filament::SwapChain*) dstSwapChain.swapchain, filament::Viewport(dstViewport.left, dstViewport.bottom, dstViewport.width, dstViewport.height), filament::Viewport(srcViewport.left, srcViewport.bottom, srcViewport.width, srcViewport.height));
 }
-- (void)readPixels:(int)xoffset :(int)yoffset :(int)width :(int)height :(NSData *)buffer{
-#warning Return Pixel data
-//    nativeRenderer->readPixels(<#uint32_t xoffset#>, <#uint32_t yoffset#>, <#uint32_t width#>, <#uint32_t height#>, <#backend::PixelBufferDescriptor &&buffer#>)
+- (NSData *)readPixels:(int)xoffset :(int)yoffset :(int)width :(int)height{
+    auto buf = filament::backend::PixelBufferDescriptor();
+    nativeRenderer->readPixels(xoffset, yoffset, width, height, std::move(buf));
+    return [[NSData alloc] initWithBytes:buf.buffer length:buf.size];
 }
-- (void)readPixels:(RenderTarget *)target :(int)xoffset :(int)yoffset :(int)width :(int)height :(NSData *)buffer{
-    
+- (NSData *)readPixels:(RenderTarget *)target :(int)xoffset :(int)yoffset :(int)width :(int)height{
+    auto buf = filament::backend::PixelBufferDescriptor();
+    nativeRenderer->readPixels((filament::RenderTarget*)target.target ,xoffset, yoffset, width, height, std::move(buf));
+    return [[NSData alloc] initWithBytes:buf.buffer length:buf.size];
 }
 
 - (double)getUserTime{

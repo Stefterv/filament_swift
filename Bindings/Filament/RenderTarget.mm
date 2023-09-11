@@ -16,4 +16,25 @@
     return self;
 }
 
+- (uint32_t)getLayer:(AttachmentPoint)attachment {
+    return nativeTarget->getLayer((filament::RenderTarget::AttachmentPoint) attachment);
+}
+
+- (uint8_t)getMipLevel:(AttachmentPoint)attachment {
+    return nativeTarget->getMipLevel((filament::RenderTarget::AttachmentPoint) attachment);
+}
+
+- (uint8_t)getSupportedColorAttachmentsCount {
+    return nativeTarget->getSupportedColorAttachmentsCount();
+}
+
+- (nonnull Texture *)getTexture:(AttachmentPoint)attachment {
+    auto texture = nativeTarget->getTexture((filament::RenderTarget::AttachmentPoint) attachment);
+    return [[Texture alloc] init:texture];
+}
+
+- (TextureCubemapFace)getFace:(AttachmentPoint)attachment {
+    return (TextureCubemapFace)nativeTarget->getFace((filament::RenderTarget::AttachmentPoint) attachment);
+}
+
 @end
