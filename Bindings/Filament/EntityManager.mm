@@ -22,12 +22,8 @@
     return utils::Entity::smuggle(nativeManager->create());
 }
 
-
 - (void)destroy:(Entity)entity{
-    auto entities = new utils::Entity[1];
-    entities[0] =  utils::Entity::import(entity);
-    nativeManager->destroy(1, entities);
-    delete[] entities;
+    nativeManager->destroy(utils::Entity::import(entity));
 }
 - (bool)isAlive:(Entity)entity{
     return nativeManager->isAlive(utils::Entity::import(entity));

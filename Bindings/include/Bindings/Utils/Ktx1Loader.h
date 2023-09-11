@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (simd_double3x3) getSphericalHarmonics:(NSData*) buffer;
 
 NS_ASSUME_NONNULL_END
-#warning("TODO Rework to KtxReader1 and KtxReader2")
+#warning Rework to KtxReader1 and KtxReader2
 @end
 
 

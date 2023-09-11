@@ -44,7 +44,7 @@
  * @param offset offset into the target buffer, expressed as a number of float4 vectors
  * @see setTangentsAt
  */
-#warning("Get simd_float4 array from swift")
+#warning  Get simd_float4 array from swift
 //- (void) setPositionsAt: (nonnull Engine*) engine :(size_t) targetIndex :(simd_float4 const*) positions :(size_t) count :(size_t) offset;
 
 /**

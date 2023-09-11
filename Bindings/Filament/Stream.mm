@@ -16,4 +16,16 @@
     return self;
 }
 
+- (int64_t)getTimestamp {
+    return nativeStream->getTimestamp();
+}
+
+- (void)setDimensions:(uint32_t)width :(uint32_t)height {
+    nativeStream->setDimensions(width, height);
+}
+
+- (StreamType)getStreamType {
+    return (StreamType) nativeStream->getStreamType();
+}
+
 @end

@@ -111,7 +111,7 @@
 }
 
 - (void)setBones:(EntityInstance)instance :(nonnull const simd_float4 *)transforms :(size_t)boneCount :(size_t)offset {
-#warning("Get float array from swift")
+#warning  Get float array from swift
 }
 
 - (void)setChannel:(EntityInstance)instance :(uint8_t)channel {
@@ -131,7 +131,7 @@
 }
 
 - (void)setMorphWeights:(EntityInstance)instance :(nonnull const float *)weights :(size_t)count :(size_t)offset {
-#warning("Get float array from swift")
+#warning  Get float array from swift
 }
 
 - (void)setSkinningBuffer:(EntityInstance)instance :(nonnull SkinningBuffer *)skinningBuffer :(size_t)count :(size_t)offset {

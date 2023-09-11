@@ -62,4 +62,14 @@
     nativeManager->create(utils::Entity::import(entity));
 }
 
+- (void)setSceneMembership:(EntityInstance)ci :(u_int32_t)scenes {
+    auto mask = filament::gltfio::NodeManager::SceneMask();
+    mask.setValue(scenes);
+    nativeManager->setSceneMembership(ci, mask);
+}
+
+- (u_int32_t)getSceneMembership:(EntityInstance)ci {
+    return nativeManager->getSceneMembership(ci).getValue();
+}
+
 @end

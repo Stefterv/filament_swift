@@ -74,7 +74,7 @@
             simd_make_float4(mat(3,0), mat(3,1), mat(3,2), mat(3,3))
        );
     }
-#warning TODO Convert to swift matrix
+#warning Convert to swift matrix
     
     return joints;
 }

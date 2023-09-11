@@ -1141,7 +1141,7 @@ typedef struct PickingQueryResult {
      */
     simd_float3 fragCoords;        //! screen space coordinates in GL convention
 } PickingQueryResult;
-#warning("TODO Implement picking")
+#warning Implement picking
 /**
 * Set the value of material global variables. There are up-to four such variable each of
 * type float4. These variables can be read in a user Material with

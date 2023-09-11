@@ -48,4 +48,28 @@
 }
 
 
+- (nullable IndirectLight *)getIndirectLight {
+    return [[IndirectLight alloc] init:nativeScene->getIndirectLight()];
+}
+
+- (void)remove:(Entity)entity {
+    nativeScene->remove(utils::Entity::import(entity));
+}
+
+- (void)removeEntities:(nonnull NSArray<NSNumber *> *)entities {
+    utils::Entity ents[entities.count];
+    for(auto i = 0; i<entities.count; i++){
+        ents[i] = utils::Entity::import(entities[i].unsignedIntValue);
+    }
+    nativeScene->removeEntities(ents, entities.count);
+}
+
+- (void)addEntities:(nonnull NSArray<NSNumber *> *)entities {
+    utils::Entity ents[entities.count];
+    for(auto i = 0; i<entities.count; i++){
+        ents[i] = utils::Entity::import(entities[i].unsignedIntValue);
+    }
+    nativeScene->addEntities(ents, entities.count);
+}
+
 @end

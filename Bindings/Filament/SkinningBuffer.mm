@@ -16,4 +16,13 @@
     return self;
 }
 
+- (void)setBones:(nonnull Engine *)engine :(nonnull const simd_float4 *)transforms :(size_t)count :(size_t)offset {
+#warning  Bone array from swift
+//    nativeBuffer->setBones((filament::Engine*) engine.engine, (filament::RenderableManager::Bone() , count, offset);
+}
+
+- (size_t)getBoneCount {
+    return nativeBuffer->getBoneCount();
+}
+
 @end

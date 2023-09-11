@@ -173,7 +173,7 @@
  *
  * @see PresentCallable
  */
-#warning("TODO Callbacks")
+#warning Callbacks
 //- (void) setFrameScheduledCallback: (FrameScheduledCallback) callback:(nullable void*) user;
 
 /**

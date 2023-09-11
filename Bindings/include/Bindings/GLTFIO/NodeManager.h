@@ -64,9 +64,8 @@
 
 - (void) setExtras: (EntityInstance) ci :(nonnull NSString*) extras;
 - (nonnull NSString*) getExtras: (EntityInstance) ci;
-#warning("TODO Scenemask to using SceneMask = utils::bitset32;")
-//- (void) setSceneMembership: (EntityInstance) ci :(SceneMask) scenes;
-//- (SceneMask) getSceneMembership: (EntityInstance) ci;
+- (void) setSceneMembership: (EntityInstance) ci :(u_int32_t) scenes;
+- (u_int32_t) getSceneMembership: (EntityInstance) ci;
 
 @end
 

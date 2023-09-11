@@ -56,7 +56,7 @@
     conf.volumeThicknessUV = config.volumeThicknessUV;
     conf.hasSheen = config.hasSheen;
     conf.hasIOR = config.hasIOR;
-#warning("UVmap")
+#warning  UVmap
     auto instance = nativeProvider->createMaterialInstance(&conf, nil, [label UTF8String], [extras UTF8String]);
     return [[MaterialInstance alloc] init:instance];
 }
