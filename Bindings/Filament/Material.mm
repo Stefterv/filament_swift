@@ -5,6 +5,9 @@
 //
 #import "Bindings/Filament/Material.h"
 #import <filament/Material.h>
+@implementation Parameter
+@end
+
 
 @implementation Material{
     filament::Material* nativeMaterial;
@@ -65,13 +68,28 @@
     return nativeMaterial->getSpecularAntiAliasingThreshold();
 }
 - (double)getRequiredAttributes{
-# warning Convert Bitset
+    auto bitset = nativeMaterial->getRequiredAttributes();
+    return bitset.getValue();
 }
 - (double)getParameterCount{
     return nativeMaterial->getParameterCount();
 }
 - (NSArray<Parameter *> *)getParameters{
-# warning Get Parameter array from material
+    auto count = nativeMaterial->getParameterCount();
+    filament::Material::ParameterInfo params[count];
+    auto available = nativeMaterial->getParameters(params, count);
+    auto res = [[NSMutableArray<Parameter*> alloc] init];
+    for(auto i = 0; i<count; i++){
+        auto param = params[i];
+        auto _param = [[Parameter alloc] init];
+        _param.type = (ParameterType)param.type;
+        _param.count = param.count;
+        _param.precision = (ParameterPrecision)param.precision;
+        _param.name = [[NSString alloc] initWithUTF8String:param.name];
+        
+        [res addObject: _param];
+    }
+    return res;
 }
 - (bool)hasParameter:(NSString *)name{
     return nativeMaterial->hasParameter(name.UTF8String);

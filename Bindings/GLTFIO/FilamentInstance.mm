@@ -64,18 +64,17 @@
 - (const simd_float4x4*)getInverseBindMatricesAt:(size_t)skinIndex {
     auto start = nativeInstance->getInverseBindMatricesAt(skinIndex);
     auto count = nativeInstance->getJointCountAt(skinIndex);
-    simd_float4x4 joints[count];
+    auto joints = new simd_float4x4 [count];
     for(auto i = 0; i<count; i++){
         auto mat = start[i];
-        simd_matrix(
+        joints[i] = simd_matrix(
             simd_make_float4(mat(0,0), mat(0,1), mat(0,2), mat(0,3)),
             simd_make_float4(mat(1,0), mat(1,1), mat(1,2), mat(1,3)),
             simd_make_float4(mat(2,0), mat(2,1), mat(2,2), mat(2,3)),
             simd_make_float4(mat(3,0), mat(3,1), mat(3,2), mat(3,3))
        );
     }
-#warning Convert to swift matrix
-    
+#warning Return simd_array
     return joints;
 }
 

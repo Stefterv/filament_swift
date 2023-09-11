@@ -173,7 +173,7 @@
  *
  * @see PresentCallable
  */
-#warning Callbacks
+#warning Callback from swift
 //- (void) setFrameScheduledCallback: (FrameScheduledCallback) callback:(nullable void*) user;
 
 /**

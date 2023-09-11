@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, StreamType){
  * @param userdata   Optional closure data. Filament will pass this into the callback when it
  *                   releases the image.
  */
-#warning Callback
+#warning Callback from swift
 //- (void) setAcquiredImage: (void*) image :(Callback) callback :(void*) userdata;
 
 /**

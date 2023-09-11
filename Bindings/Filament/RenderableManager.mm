@@ -111,7 +111,7 @@
 }
 
 - (void)setBones:(EntityInstance)instance :(nonnull const simd_float4 *)transforms :(size_t)boneCount :(size_t)offset {
-#warning  Get float array from swift
+#warning  Get float4 array from swift
 }
 
 - (void)setChannel:(EntityInstance)instance :(uint8_t)channel {
