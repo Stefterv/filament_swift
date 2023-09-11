@@ -10,6 +10,24 @@
 #ifndef NameComponentManager_h
 #define NameComponentManager_h
 
+/**
+ * \class NameComponentManager NameComponentManager.h utils/NameComponentManager.h
+ * \brief Allows clients to associate string labels with entities.
+ *
+ * To access the name of an existing entity, clients should first use NameComponentManager to get a
+ * temporary handle called an \em instance. Please note that instances are ephemeral; clients should
+ * store entities, not instances.
+ *
+ * Usage example:
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * auto names = new NameComponentManager(EntityManager::get());
+ * names->addComponent(myEntity);
+ * names->setName(names->getInstance(myEntity), "Jeanne d'Arc");
+ * ...
+ * printf("%s\n", names->getName(names->getInstance(myEntity));
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
 @interface NameComponentManager : NSObject
 
 @property (nonatomic, readonly, nonnull) void* manager  NS_SWIFT_UNAVAILABLE("Don't access the raw pointers");

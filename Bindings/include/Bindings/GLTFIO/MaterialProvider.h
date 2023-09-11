@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, AlphaMode) {
     AlphaModeBlend
 };
 
-#warning("gltfIO TODO")
 NS_SWIFT_NAME(MaterialProvider.MaterialKey)
 @interface MaterialKey : NSObject
 @property bool unlit;
@@ -70,24 +69,56 @@ NS_SWIFT_NAME(glTFIO.MaterialProvider)
  *
  * @param config Specifies requirements; might be mutated due to resource constraints.
  * @param uvmap Output argument that gets populated with a small table that maps from a glTF uv
- *              index to a Filament uv index (0 = UNUSED, 1 = UV0, 2 = UV1).
+ *              index to a Filament uv index.
  * @param label Optional tag that is not a part of the cache key.
  * @param extras Optional extras as stringified JSON (not a part of the cache key).
+ *               Does not store the pointer.
  */
-- (nullable MaterialInstance*) createMaterialInstance: (nonnull MaterialKey*) config :(nonnull NSArray<NSNumber*>*) uvmap :(nullable NSString*) label :(nullable NSString*) extras;
+- (nonnull MaterialInstance*) createMaterialInstance: (nonnull MaterialKey*) config :(nonnull void*) uvmap :(nullable NSString*) label :(nullable NSString*) extras;
+
+/**
+ * Creates or fetches a compiled Filament material corresponding to the given config.
+ */
+- (nonnull Material*) getMaterial: (nonnull MaterialKey*) config :(nonnull void*) uvmap :(nonnull NSString*) label;
+
+/**
+ * Gets a weak reference to the array of cached materials.
+ */
 - (nonnull NSArray<Material*>*) getMaterials;
+
+/**
+ * Destroys all cached materials.
+ *
+ * This is not called automatically when MaterialProvider is destroyed, which allows
+ * clients to take ownership of the cache if desired.
+ */
+- (void) destroyMaterials;
+
 /**
  * Returns true if the presence of the given vertex attribute is required.
  *
  * Some types of providers (e.g. ubershader) require dummy attribute values
  * if the glTF model does not provide them.
- *
- * NOTE: The given attribute is the VertexAttribute enum casted to an integer.
- * This is done to streamline the JNI work between Java and Native layers.
  */
 - (bool) needsDummyData: (VertexAttribute) attrib;
-
+/**
+ * Creates a material provider that builds materials on the fly, composing GLSL at run time.
+ *
+ * @param optimizeShaders Optimizes shaders, but at significant cost to construction time.
+ * @return New material provider that can build materials at run time.
+ *
+ * Requires \c libfilamat to be linked in. Not available in \c libgltfio_core.
+ *
+ * @see createUbershaderProvider
+ */
 + (nonnull instancetype) createUberShaderProvider: (nonnull Engine*) engine;
+/**
+ * Creates a material provider that loads a small set of pre-built materials.
+ *
+ * @return New material provider that can quickly load a material from a cache.
+ *
+ * @see createJitShaderProvider
+ */
 + (nonnull instancetype) createJitShaderProvider: (nonnull Engine*) engine :(bool) optimizeShaders;
 
 @end

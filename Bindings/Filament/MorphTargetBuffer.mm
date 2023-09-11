@@ -25,7 +25,7 @@
 }
 
 - (void)setPositionsAt:(nonnull Engine *)engine :(size_t)targetIndex :(nonnull const simd_float3 *)positions :(size_t)count :(size_t)offset {
-#warning("TODO create array")
+#warning("Get simd_float3 array from swift")
 //    nativeBuffer->setPositionsAt((filament::Engine*)engine.engine, targetIndex, pos, count);
 }
 

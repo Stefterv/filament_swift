@@ -6,17 +6,37 @@
 //
 #import "Bindings/Utils/NameComponentManager.h"
 #import <utils/NameComponentManager.h>
+#import <utils/EntityManager.h>
 
 @implementation NameComponentManager{
     utils::NameComponentManager* nativeManager;
 }
 
-- (id) init:(void *)manager{
-    self->_manager = manager;
-    self->nativeManager = (utils::NameComponentManager*) manager;
-    return self;
+- (EntityInstance)getInstance:(Entity)e {
+    return nativeManager->getInstance(utils::Entity::import(e));
 }
 
-#warning("TODO")
+- (nonnull NSString *)getName:(EntityInstance)instance {
+    auto name = nativeManager->getName(instance);
+    return [[NSString alloc] initWithUTF8String:name];
+}
+
+- (nonnull id)init:(nonnull EntityManager *)em {
+    auto manager = utils::NameComponentManager(*(utils::EntityManager*)em.manager);
+    self->_manager = (void*)&manager;
+    self->nativeManager = &manager;
+}
+
+- (void)removeComponent:(Entity)e {
+    nativeManager->removeComponent(utils::Entity::import(e));
+}
+
+- (void)setName:(EntityInstance)instance :(nonnull NSString *)name {
+    nativeManager->setName(instance, name.UTF8String);
+}
+
+- (void)addComponent:(Entity)e {
+    nativeManager->addComponent(utils::Entity::import(e));
+}
 
 @end
