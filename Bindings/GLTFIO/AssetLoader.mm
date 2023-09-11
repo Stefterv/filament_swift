@@ -68,4 +68,23 @@
     nativeLoader->destroyAsset((filament::gltfio::FilamentAsset*) asset.asset);
 }
 
+- (void)enableDiagnostics:(bool)enable {
+    nativeLoader->enableDiagnostics(enable);
+}
+
+- (nonnull NSArray<Material *> *)getMaterials {
+    auto materials = nativeLoader->getMaterials();
+    auto materialsCount = nativeLoader->getMaterialsCount();
+    auto res = [[NSMutableArray alloc] init];
+    for (auto i = 0; i<materialsCount; i++) {
+        auto mat = [[Material alloc] init:(void*)materials[i]];
+        [res addObject: mat];
+    }
+    return res;
+}
+
++ (void)destroy:(nonnull AssetLoader *)loader {
+    filament::gltfio::AssetLoader::destroy(&loader->nativeLoader);
+}
+
 @end

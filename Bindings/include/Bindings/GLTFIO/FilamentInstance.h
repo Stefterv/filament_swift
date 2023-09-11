@@ -97,7 +97,7 @@ NS_SWIFT_NAME(glTFIO.FilamentInstance)
  *
  * See getJointCountAt for determining the number of matrices returned (i.e. the number of joints).
  */
-- (simd_float4) getInverseBindMatricesAt: (size_t) skinIndex;
+- (nonnull const simd_float4x4*) getInverseBindMatricesAt: (size_t) skinIndex;
 
 /**
  * Resets the AABB on all renderables by manually computing the bounding box.

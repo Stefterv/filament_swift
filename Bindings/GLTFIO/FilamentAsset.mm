@@ -4,8 +4,12 @@
 //  Created by Stef Tervelde on 30.06.22.
 //
 #import "Bindings/GLTFIO/FilamentAsset.h"
+#import "Bindings/GLTFIO/FilamentInstance.h"
+#import "Bindings/Filament/Scene.h"
+#import "Bindings/Filament/Engine.h"
 #import <gltfio/FilamentAsset.h>
 #import <utils/Entity.h>
+#import <filament/Scene.h>
 
 @implementation FilamentAsset{
     filament::gltfio::FilamentAsset* nativeAsset;
@@ -78,8 +82,12 @@
     }
     return result;
 }
-- (Box *)getBoundingBox{
-#warning ("Implement")
+- (Aabb *)getBoundingBox{
+    auto box = nativeAsset->getBoundingBox();
+    auto res = new Aabb();
+    res->min = simd_make_float3(box.min.r, box.min.g, box.min.b);
+    res->max = simd_make_float3(box.max.r, box.max.g, box.max.b);
+    return res;
 }
 - (NSString *)getName:(Entity)entity{
     auto name = nativeAsset->getName(utils::Entity::import(entity));
@@ -108,4 +116,89 @@
     }
     return [[NSString alloc] initWithUTF8String:name];
 }
+- (void)addEntitiesToScene:(nonnull Scene *)targetScene :(nonnull NSArray<NSNumber*>*)entities :(uint32_t)sceneFilter {
+    auto scene = (filament::Scene*) targetScene.scene;
+    utils::Entity ents[entities.count];
+    for (auto i = 0; i<entities.count; i++) {
+        ents[i] = utils::Entity::import([entities[i] unsignedIntValue]);
+    }
+    
+    auto filter = filament::gltfio::NodeManager::SceneMask();
+    filter.setValue(sceneFilter);
+    nativeAsset->addEntitiesToScene(*scene, ents, entities.count, filter);
+}
+
+- (bool)areFilamentComponentsDetached {
+    return nativeAsset->areFilamentComponentsDetached();
+}
+
+- (void)detachFilamentComponents {
+    nativeAsset->detachFilamentComponents();
+}
+
+- (nonnull Engine *)getEngine {
+    auto engine = nativeAsset->getEngine();
+    return [[Engine alloc] init: engine];
+}
+
+- (nonnull NSArray<NSNumber *> *)getEntitiesByName:(nonnull NSString *)name :(size_t)maxCount {
+    utils::Entity ents[maxCount];
+    auto size = nativeAsset->getEntitiesByName(name.UTF8String, ents, maxCount);
+    auto res = [[NSMutableArray alloc] init];
+    for(auto i = 0; i<size; i++){
+        auto ent = utils::Entity::smuggle(ents[i]);
+        auto number = [[NSNumber alloc] initWithUnsignedInt:ent];
+        [res addObject: number];
+    }
+    return res;
+}
+
+- (nonnull NSArray<NSNumber *> *)getEntitiesByPrefix:(nonnull NSString *)prefix :(size_t)maxCount {
+    utils::Entity ents[maxCount];
+    auto size = nativeAsset->getEntitiesByPrefix(prefix.UTF8String, ents, maxCount);
+    auto res = [[NSMutableArray alloc] init];
+    for(auto i = 0; i<size; i++){
+        auto ent = utils::Entity::smuggle(ents[i]);
+        auto number = [[NSNumber alloc] initWithUnsignedInt:ent];
+        [res addObject: number];
+    }
+    return res;
+}
+
+- (nonnull FilamentInstance *)getInstance {
+    return [[FilamentInstance alloc] init: nativeAsset->getInstance()];
+}
+
+- (size_t)getMorphTargetCountAt:(Entity)entity {
+    auto ent = utils::Entity::import(entity);
+    nativeAsset->getMorphTargetCountAt(ent);
+}
+
+- (nonnull NSString *)getMorphTargetNameAt:(Entity)entity :(size_t)targetIndex {
+    auto ent = utils::Entity::import(entity);
+    auto name = nativeAsset->getMorphTargetNameAt(ent, targetIndex);
+    return [[NSString alloc] initWithUTF8String:name];
+}
+
+- (size_t)getSceneCount {
+    return nativeAsset->getSceneCount();
+}
+
+- (nonnull NSString *)getSceneName:(size_t)sceneIndex {
+    return [[NSString alloc] initWithUTF8String:nativeAsset->getSceneName(sceneIndex)];
+}
+
+- (const void *)getSourceAsset {
+    return nativeAsset->getSourceAsset();
+}
+
+- (Entity)getWireframe {
+    auto ent = utils::Entity::smuggle(nativeAsset->getWireframe());
+    return ent;
+}
+
+- (void)releaseSourceData {
+    nativeAsset->releaseSourceData();
+}
+
 @end

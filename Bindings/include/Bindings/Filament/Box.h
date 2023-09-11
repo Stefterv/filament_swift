@@ -13,6 +13,10 @@ typedef struct{
     simd_float3 center;
     simd_float3 halfExtent;
 } Box;
+typedef struct{
+    simd_float3 min;
+    simd_float3 max;
+} Aabb;
 
 
 #endif /* Box_h */

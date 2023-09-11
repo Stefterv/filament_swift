@@ -90,7 +90,7 @@ NS_SWIFT_NAME(glTFIO.FilamentAsset)
  * This does not return a bounding box over all FilamentInstance, it's just a straightforward
  * AAAB that can be determined at load time from the asset data.
  */
-- (nonnull Box*) getBoundingBox;
+- (nonnull Aabb*) getBoundingBox;
 
 /** Gets the NameComponentManager label for the given entity, if it exists. */
 - (nonnull NSString*) getName: (Entity) entity;
@@ -120,18 +120,18 @@ NS_SWIFT_NAME(glTFIO.FilamentAsset)
 /**
 * Gets the morph target name at the given index in the given entity.
 */
-- (nonnull NSString*) getMorphTargetNameAt: (nonnull Entity*) entity :(size_t) targetIndex;
+- (nonnull NSString*) getMorphTargetNameAt: (Entity) entity :(size_t) targetIndex;
 
 /**
 * Returns the number of morph targets in the given entity.
 */
-- (size_t) getMorphTargetCountAt: (nonnull Entity*) entity;
+- (size_t) getMorphTargetCountAt: (Entity) entity;
 
 /**
 * Lazily creates a single LINES renderable that draws the transformed bounding-box hierarchy
 * for diagnostic purposes. The wireframe is owned by the asset so clients should not delete it.
 */
-- (nonnull Entity*) getWireframe;
+- (Entity) getWireframe;
 
 /**
 * Returns the Filament engine associated with the AssetLoader that created this asset.
@@ -150,7 +150,7 @@ NS_SWIFT_NAME(glTFIO.FilamentAsset)
 * Returns a weak reference to the underlying cgltf hierarchy. This becomes invalid after
 * calling releaseSourceData().
 */
-- (nonnull void*) getSourceAsset;
+- (nullable const void*) getSourceAsset;
 
 /**
 * Returns the number of scenes in the asset.
@@ -171,7 +171,7 @@ NS_SWIFT_NAME(glTFIO.FilamentAsset)
 * This is just a helper that provides an alternative to directly calling scene->addEntities()
 * and provides filtering functionality.
 */
-- (void) addEntitiesToScene: (nonnull Scene*) targetScene :(nonnull NSArray<NSNumber*>*) entities :(nonnull SceneMask*) sceneFilter;
+- (void) addEntitiesToScene: (nonnull Scene*) targetScene :(nonnull NSArray<NSNumber*>*) entities :(uint32_t) sceneFilter;
 
 /**
 * Releases ownership of entities and their Filament components.
