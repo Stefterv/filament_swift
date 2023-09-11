@@ -1,3 +1,3 @@
-# filament_swift
+# Filament Swift
 
-A description of this package.
+Swift bindings and Swift Package Manager package for [Filament](https://github.com/google/filament)
