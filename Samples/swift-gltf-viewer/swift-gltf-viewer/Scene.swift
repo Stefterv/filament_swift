@@ -13,6 +13,7 @@ import Filament
 
 class FilaSceneProps : ObservableObject{
     @Published var size = CGSize(width: 0, height: 0)
+    @Published var offset = 0.0
     
     let engine : Filament.Engine
     let renderer : Filament.Renderer
@@ -100,7 +101,10 @@ class FilaSceneProps : ObservableObject{
             return
         }
         let origin = SCNNode()
-        origin.position = SCNVector3(0, 0.5, 0.5)
+        offset -= 0.01
+        let x = sin(offset)
+        let y = cos(offset)
+        origin.position = SCNVector3(x, 0.5, y)
         
         camera.setLensProjection(28, size.width/size.height, 0.05, 1000.0)
         camera.lookAt(origin.simdPosition, SCNNode().simdPosition, SCNNode().simdWorldUp)
