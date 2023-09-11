@@ -178,7 +178,7 @@ typedef NS_ENUM(NSInteger, MaterialDomain){
 /**
  * How transparent objects are handled
  */
-NS_SWIFT_NAME(Transparency.Mode)
+//NS_SWIFT_NAME(Transparency.Mode)
 typedef NS_ENUM(NSInteger, TransparencyMode){
     //! the transparent object is drawn honoring the raster state
     DEFAULT,
@@ -198,7 +198,7 @@ typedef NS_ENUM(NSInteger, TransparencyMode){
 /**
  * Reflection mode
  */
-NS_SWIFT_NAME(Reflection.Mode)
+//NS_SWIFT_NAME(Reflection.Mode)
 typedef NS_ENUM(NSInteger, ReflectionMode){
     Default         = 0, //! reflections sample from the scene's IBL only
     ScreenSpace    = 1, //! reflections sample from screen space, and fallback to the scene's IBL

@@ -16,4 +16,18 @@
     return self;
 }
 
+- (nonnull instancetype)count:(size_t)count {
+    nativeBuilder->count(count);
+    return self;
+}
+
+- (nonnull instancetype)vertexCount:(size_t)vertexCount {
+    nativeBuilder->vertexCount(vertexCount);
+    return self;
+}
+
+- (nonnull MorphTargetBuffer *)build:(nonnull Engine *)engine {
+    return [[MorphTargetBuffer alloc] init:nativeBuilder->build(*(filament::Engine*)engine.engine)];
+}
+
 @end

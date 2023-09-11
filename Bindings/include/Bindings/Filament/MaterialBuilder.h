@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param value The value to use for the constant parameter, must match the type specified
  *              in the material definition.
  */
-- (instancetype) constantInt: (nonnull NSString*) name :(uint32_t) value;
+- (instancetype) constantInt: (nonnull NSString*) name :(int) value;
 - (instancetype) constantFloat: (nonnull NSString*) name :(float) value;
 - (instancetype) constantBool: (nonnull NSString*) name :(bool) value;
 /**

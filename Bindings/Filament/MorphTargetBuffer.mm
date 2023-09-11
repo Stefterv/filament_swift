@@ -16,4 +16,20 @@
     return self;
 }
 
+- (size_t)getVertexCount {
+    return nativeBuffer->getVertexCount();
+}
+
+- (size_t)getCount {
+    return nativeBuffer->getCount();
+}
+
+- (void)setPositionsAt:(nonnull Engine *)engine :(size_t)targetIndex :(nonnull const simd_float3 *)positions :(size_t)count :(size_t)offset {
+#warning("TODO create array")
+//    nativeBuffer->setPositionsAt((filament::Engine*)engine.engine, targetIndex, pos, count);
+}
+
+- (void)setTangentsAt:(nonnull Engine *)engine :(size_t)targetIndex :(nonnull const simd_short4 *)tangents :(size_t)count :(size_t)offset {
+}
+
 @end

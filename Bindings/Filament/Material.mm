@@ -115,4 +115,48 @@
 - (void)setDefaultParameterTexture:(NSString *)name :(Texture *)texture :(TextureSampler *)sampler{
     nativeMaterial->setDefaultParameter(name.UTF8String, (filament::Texture*) texture.texture, *(filament::TextureSampler*) sampler.sampler);
 }
+- (nonnull MaterialInstance *)getDefaultInstance {
+    return [[MaterialInstance alloc] init:nativeMaterial->getDefaultInstance()];
+}
+
+- (nonnull NSString *)getName {
+    return [[NSString alloc] initWithUTF8String:nativeMaterial->getName()];
+}
+
+- (ReflectionMode)getReflectionMode {
+    return (ReflectionMode)nativeMaterial->getReflectionMode();
+}
+
+- (TransparencyMode)getTransparencyMode {
+    return (TransparencyMode)nativeMaterial->getTransparencyMode();
+}
+
+- (bool)hasShadowMultiplier {
+    return nativeMaterial->hasShadowMultiplier();
+}
+
+- (bool)hasSpecularAntiAliasing {
+    return nativeMaterial->hasSpecularAntiAliasing();
+}
+
+- (bool)isAlphaToCoverageEnabled {
+    return nativeMaterial->isAlphaToCoverageEnabled();
+}
+
+- (bool)isSampler:(nonnull NSString *)name {
+    return nativeMaterial->isSampler(name.UTF8String);
+}
+
+- (void)setDefaultParameterRgb:(nonnull NSString *)name :(RgbType)type :(simd_float3)vector {
+    nativeMaterial->setDefaultParameter(name.UTF8String, (filament::RgbType)type, filament::math::float3(vector[0],vector[1],vector[2]));
+}
+
+- (void)setDefaultParameterRgba:(nonnull NSString *)name :(RgbaType)type :(simd_float4)vector {
+    nativeMaterial->setDefaultParameter(name.UTF8String, (filament::RgbaType)type, filament::math::float4(vector[0],vector[1],vector[2],vector[3]));
+}
+
+- (MaterialDomain)getMaterialDomain {
+    return (MaterialDomain)nativeMaterial->getMaterialDomain();
+}
+
 @end

@@ -86,7 +86,13 @@
 }
 
 - (nonnull NSArray<MaterialInstance *> *)getMaterialInstances {
-#warning TODO
+    auto instances = nativeInstance->getMaterialInstances();
+    auto count = nativeInstance->getMaterialInstanceCount();
+    auto res = [[NSMutableArray alloc] init];
+    for (auto i = 0; i<count; i++) {
+        [res addObject:[[MaterialInstance alloc] init:instances[i]]];
+    }
+    return res;
 }
 
 - (size_t)getMaterialVariantCount {
