@@ -6,5 +6,7 @@
 import Bindings
 
 extension Stream{
-    
+    public var timeStamp: Int64{
+        getTimestamp()
+    }
 }

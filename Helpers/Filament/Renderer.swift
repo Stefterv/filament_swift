@@ -5,6 +5,8 @@
 //
 import Bindings
 
-extension RenderTarget{
-    
+extension Renderer{
+    public var userTime: Double{
+        getUserTime()
+    }
 }

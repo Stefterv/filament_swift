@@ -56,7 +56,6 @@
  * @see Engine#destroyStream
  */
 //! Stream for external textures
-NS_SWIFT_NAME(Stream.Type)
 typedef NS_ENUM(NSInteger, StreamType){
     NATIVE,     //!< Not synchronized but copy-free. Good for video.
     ACQUIRED,   //!< Synchronized, copy-free, and take a release callback. Good for AR but requires API 26+.

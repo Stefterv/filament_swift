@@ -6,5 +6,7 @@
 import Bindings
 
 extension SkinningBuffer{
-    
+    public var boneCount: Int{
+        getBoneCount()
+    }
 }

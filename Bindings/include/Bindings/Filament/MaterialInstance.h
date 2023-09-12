@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setParameterMat3f: (NSString*) name :(simd_float3x3) vector;
 - (void) setParameterMat4f: (NSString*) name :(simd_float4x4) vector;
 - (void) setParameterTexture: (NSString*) name :(Texture*) texture :(TextureSampler*) sampler;
+#warning Add Color Parameters
 /**
  * Set up a custom scissor rectangle; by default this encompasses the View.
  *

@@ -5,6 +5,8 @@
 //
 import Bindings
 
-extension Renderer.ClearOptions{
-    
+extension RenderTarget{
+    public var supportedColorAttachmentsCount: UInt8{
+        getSupportedColorAttachmentsCount()
+    }
 }

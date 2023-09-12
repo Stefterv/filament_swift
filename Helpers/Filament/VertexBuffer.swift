@@ -6,5 +6,7 @@
 import Bindings
 
 extension VertexBuffer{
-    
+    public var vertexCount: Int{
+        getVertexCount()
+    }
 }

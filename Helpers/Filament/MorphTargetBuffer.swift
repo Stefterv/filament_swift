@@ -6,5 +6,10 @@
 import Bindings
 
 extension MorphTargetBuffer{
-    
+    public var vertexCount: Int{
+        getVertexCount()
+    }
+    public var count: Int{
+        getCount()
+    }
 }

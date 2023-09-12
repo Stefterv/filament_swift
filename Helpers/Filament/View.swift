@@ -70,4 +70,53 @@ extension View{
             setAntiAliasing(newValue)
         }
     }
+    public var name: String{
+        get{
+            getName()
+        }
+        set{
+            setName(newValue)
+        }
+    }
+    public var temporalAntiAliasing: TemporalAntiAliasingOptions{
+        get{
+            getTemporalAntiAliasingOptions()
+        }
+        set{
+            setTemporalAntiAliasingOptions(newValue)
+        }
+    }
+    public var screenSpaceReflectionsOptions: ScreenSpaceReflectionsOptions{
+        get{
+            getScreenSpaceReflectionsOptions()
+        }
+        set{
+            setScreenSpaceReflectionsOptions(newValue)
+        }
+    }
+    public var guardBandOptions: GuardBandOptions{
+        get{
+            getGuardBandOptions()
+        }
+        set{
+            setGuardBandOptions(newValue)
+        }
+    }
+    public var multiSampleAntiAliasingOptions: MultiSampleAntiAliasingOptions{
+        get{
+            getMultiSampleAntiAliasingOptions()
+        }
+        set{
+            setMultiSampleAntiAliasingOptions(newValue)
+        }
+    }
+    public var colorGrading: ColorGrading{
+        get{
+            getColorGrading()
+        }
+        set{
+            setColorGrading(newValue)
+        }
+    }
+#warning("Complete")
 }

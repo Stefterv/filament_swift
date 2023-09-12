@@ -9,4 +9,12 @@ extension TransformManager{
     public func setTransform(_ instance: EntityInstance, _ localTransform: simd_float4x4){
         setTransform(instance, localTransform.toDouble())
     }
+    public var accurateTranslations: Bool{
+        get{
+            isAccurateTranslationsEnabled()
+        }
+        set{
+            setAccurateTranslationsEnabled(newValue)
+        }
+    }
 }

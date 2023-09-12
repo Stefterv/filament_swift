@@ -73,7 +73,7 @@
 /**
  * @return the associated texture, or null if it does not exist
  */
-- (nonnull Texture*) getTexture;
+- (nullable Texture*) getTexture;
 @end
 
 

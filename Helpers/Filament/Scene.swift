@@ -6,6 +6,7 @@
 import Bindings
 
 extension Scene{
+#warning("interact with entities as an array scene.entities.add")
     public func addEntities(_ entities: [Entity]){
         for entity in entities{
             addEntity(entity)
@@ -29,5 +30,13 @@ extension Scene{
     }
     public var lightCount: Int{
         getLightCount()
+    }
+    public var indirectLight: IndirectLight?{
+        get{
+            getIndirectLight()
+        }
+        set{
+            setIndirectLight(newValue)
+        }
     }
 }

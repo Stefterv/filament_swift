@@ -7,5 +7,5 @@
 import Bindings
 
 extension Colors{
-    
+#warning("Implement functions")
 }

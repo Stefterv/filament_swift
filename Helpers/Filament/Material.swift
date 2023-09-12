@@ -42,4 +42,13 @@ extension Material{
     public func setDefaultParameter(_ name: String, _ integer: simd_int4){
         setDefaultParameterInt4(name, integer)
     }
+    public func setDefaultParameter(_ name: String, _ texture: Texture, _ sampler: TextureSampler){
+        setDefaultParameterTexture(name, texture, sampler)
+    }
+    public func setDefaultParamter(_ name: String, _ type: RgbType, _ color: simd_float3){
+        setDefaultParameterRgb(name, type, color)
+    }
+    public func setDefaultParamter(_ name: String, _ type: RgbaType, _ color: simd_float4){
+        setDefaultParameterRgba(name, type, color)
+    }
 }

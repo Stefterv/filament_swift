@@ -58,4 +58,7 @@ extension MaterialInstance{
     public func setParameter(_ name: String, _ texture: Texture, _ sampler: TextureSampler){
         setParameterTexture(name, texture, sampler)
     }
+    public var name: String{
+        getName()
+    }
 }
