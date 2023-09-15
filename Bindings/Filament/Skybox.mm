@@ -21,7 +21,7 @@
     return nativeSkybox->getLayerMask();
 }
 
-- (nonnull Texture *)getTexture {
+- (nullable Texture *)getTexture {
     return [[Texture alloc] init: (void*)nativeSkybox->getTexture()];
     
 }

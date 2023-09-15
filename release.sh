@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-VERSION="1.42.1"
+VERSION="1.42.2"
+TYPE="release"
 
 if [ ! -d "filament" ]
 then
@@ -11,9 +12,9 @@ else
 fi
 git -C filament checkout tags/v${VERSION}
 
-filament/build.sh -p ios -i debug
+filament/build.sh -p ios -i "${TYPE}"
 
-LEADER_PATH="filament/out/ios-debug/filament/lib/arm64"
+LEADER_PATH="filament/out/ios-${TYPE}/filament/lib/arm64"
 OUTPUT_DIR="lib/"
 
 rm -rf "${OUTPUT_DIR}"

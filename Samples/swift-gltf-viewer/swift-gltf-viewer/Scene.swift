@@ -82,7 +82,7 @@ class FilaSceneProps : ObservableObject{
         let skbURL = Bundle.main.url(forResource: "skybox", withExtension: ".ktx")!
         guard let skbData = try? Data(contentsOf: skbURL) else { return }
 
-        scene.setIndirectLight(Ktx1Loader.createIndirectLight(engine, iblData, false))
+        scene.indirectLight = Ktx1Loader.createIndirectLight(engine, iblData, false)
 
         scene.skybox = Ktx1Loader.createSkybox(engine, skbData, false)
     }
