@@ -4,7 +4,7 @@ Swift bindings and Swift Package Manager package for [Filament](https://github.c
 
 ## Installation
 
-# Xcode
+### Xcode
 
 Select File -> Swift Packages -> Add Package Dependency and enter https://github.com/Stefterv/filament_swift/
 
