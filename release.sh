@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-VERSION="1.42.2"
+VERSION="1.43.0"
 TYPE="release"
 
 if [ ! -d "filament" ]
