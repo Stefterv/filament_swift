@@ -176,7 +176,6 @@
     res.dirtStrength = options.dirtStrength;
     res.strength = options.strength;
     res.resolution = options.resolution;
-    res.anamorphism = options.anamorphism;
     res.levels = options.levels;
     res.blendMode = (BlendMode)options.blendMode;
     res.threshold = options.threshold;
