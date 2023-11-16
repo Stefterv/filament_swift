@@ -172,10 +172,11 @@ public:
     using Platform = backend::Platform;
     using Backend = backend::Backend;
     using DriverConfig = backend::Platform::DriverConfig;
+    using FeatureLevel = backend::FeatureLevel;
 
     /**
      * Config is used to define the memory footprint used by the engine, such as the
-     * command buffer size. Config can be used to customize engine requirements based 
+     * command buffer size. Config can be used to customize engine requirements based
      * on the applications needs.
      *
      *    .perRenderPassArenaSizeMB (default: 3 MiB)
@@ -268,6 +269,19 @@ public:
          */
         uint32_t perFrameCommandsSizeMB = FILAMENT_PER_FRAME_COMMANDS_SIZE_IN_MB;
 
+        /**
+         * Number of threads to use in Engine's JobSystem.
+         *
+         * Engine uses a utils::JobSystem to carry out paralleization of Engine workloads. This
+         * value sets the number of threads allocated for JobSystem. Configuring this value can be
+         * helpful in CPU-constrained environments where too many threads can cause contention of
+         * CPU and reduce performance.
+         *
+         * The default value is 0, which implies that the Engine will use a heuristic to determine
+         * the number of threads to use.
+         */
+        uint32_t jobSystemThreadCount = 0;
+
         /*
          * Number of most-recently destroyed textures to track for use-after-free.
          *
@@ -337,6 +351,12 @@ public:
          * @return A reference to this Builder for chaining calls.
          */
         Builder& sharedContext(void* sharedContext) noexcept;
+
+        /**
+         * @param featureLevel The feature level at which initialize Filament.
+         * @return A reference to this Builder for chaining calls.
+         */
+        Builder& featureLevel(FeatureLevel featureLevel) noexcept;
 
 #if UTILS_HAS_THREADING
         /**
@@ -469,9 +489,6 @@ public:
      */
     static void destroy(Engine* engine);
 
-    using FeatureLevel = backend::FeatureLevel;
-
-
     /**
      * Query the feature level supported by the selected backend.
      *
@@ -483,17 +500,23 @@ public:
     FeatureLevel getSupportedFeatureLevel() const noexcept;
 
     /**
-     * Activate all features of a given feature level. By default FeatureLevel::FEATURE_LEVEL_1 is
-     * active. The selected feature level must not be higher than the value returned by
-     * getActiveFeatureLevel() and it's not possible lower the active feature level.
+     * Activate all features of a given feature level. If an explicit feature level is not specified
+     * at Engine initialization time via Builder::featureLevel, the default feature level is
+     * FeatureLevel::FEATURE_LEVEL_0 on devices not compatible with GLES 3.0; otherwise, the default
+     * is FeatureLevel::FEATURE_LEVEL_1. The selected feature level must not be higher than the
+     * value returned by getActiveFeatureLevel() and it's not possible lower the active feature
+     * level. Additionally, it is not possible to modify the feature level at all if the Engine was
+     * initialized at FeatureLevel::FEATURE_LEVEL_0.
      *
      * @param featureLevel the feature level to activate. If featureLevel is lower than
-     *                     getActiveFeatureLevel(), the current (higher) feature level is kept.
-     *                     If featureLevel is higher than getSupportedFeatureLevel(), an exception
-     *                     is thrown, or the program is terminated if exceptions are disabled.
+     *                     getActiveFeatureLevel(), the current (higher) feature level is kept. If
+     *                     featureLevel is higher than getSupportedFeatureLevel(), or if the engine
+     *                     was initialized at feature level 0, an exception is thrown, or the
+     *                     program is terminated if exceptions are disabled.
      *
      * @return the active feature level.
      *
+     * @see Builder::featureLevel
      * @see getSupportedFeatureLevel
      * @see getActiveFeatureLevel
      */
@@ -814,14 +837,14 @@ public:
 #if defined(__EMSCRIPTEN__)
     /**
       * WebGL only: Tells the driver to reset any internal state tracking if necessary.
-      * 
-      * This is only useful when integrating an external renderer into Filament on platforms 
+      *
+      * This is only useful when integrating an external renderer into Filament on platforms
       * like WebGL, where share contexts do not exist. Filament keeps track of the GL
       * state it has set (like which texture is bound), and does not re-set that state if
       * it does not think it needs to. However, if an external renderer has set different
       * state in the mean time, Filament will use that new state unknowingly.
-      * 
-      * If you are in this situation, call this function - ideally only once per frame, 
+      *
+      * If you are in this situation, call this function - ideally only once per frame,
       * immediately after calling Engine::execute().
       */
     void resetBackendState() noexcept;
