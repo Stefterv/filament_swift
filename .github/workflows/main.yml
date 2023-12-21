@@ -9,7 +9,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download Latest
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+      - name: Download latest filament and generate library files
         run: |
           ./release.sh
       - name: Commit changes
