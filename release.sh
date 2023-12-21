@@ -2,7 +2,7 @@
 set -e
 
 VERSION="1.49.1"
-TYPE="release"
+TYPE=${1:-"release"}
 
 if [ ! -d "filament" ]
 then
@@ -10,7 +10,8 @@ then
 else
     git -C filament fetch
 fi
-git -C filament checkout tags/v${VERSION}
+latestTag=$(git describe --tags `git filament rev-list --tags --max-count=1`)
+git -C filament checkout $latestTag
 
 filament/build.sh -p ios -i "${TYPE}"
 
