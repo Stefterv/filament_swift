@@ -10,7 +10,10 @@ then
 else
     git -C filament fetch
 fi
-latestTag=$(git describe --tags `git filament rev-list --tags --max-count=1`)
+latestTag=$(git -C filament describe --tags `git -C filament rev-list --tags --max-count=1`)
+
+echo "Checking out ${latestTag}"
+
 git -C filament checkout $latestTag
 
 filament/build.sh -p ios -i "${TYPE}"
