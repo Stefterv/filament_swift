@@ -66,26 +66,26 @@ class Viewport;
  */
 class UTILS_PUBLIC View : public FilamentAPI {
 public:
-    using QualityLevel = QualityLevel;
-    using BlendMode = BlendMode;
-    using AntiAliasing = AntiAliasing;
-    using Dithering = Dithering;
-    using ShadowType = ShadowType;
+    using QualityLevel = filament::QualityLevel;
+    using BlendMode = filament::BlendMode;
+    using AntiAliasing = filament::AntiAliasing;
+    using Dithering = filament::Dithering;
+    using ShadowType = filament::ShadowType;
 
-    using DynamicResolutionOptions = DynamicResolutionOptions;
-    using BloomOptions = BloomOptions;
-    using FogOptions = FogOptions;
-    using DepthOfFieldOptions = DepthOfFieldOptions;
-    using VignetteOptions = VignetteOptions;
-    using RenderQuality = RenderQuality;
-    using AmbientOcclusionOptions = AmbientOcclusionOptions;
-    using TemporalAntiAliasingOptions = TemporalAntiAliasingOptions;
-    using MultiSampleAntiAliasingOptions = MultiSampleAntiAliasingOptions;
-    using VsmShadowOptions = VsmShadowOptions;
-    using SoftShadowOptions = SoftShadowOptions;
-    using ScreenSpaceReflectionsOptions = ScreenSpaceReflectionsOptions;
-    using GuardBandOptions = GuardBandOptions;
-    using StereoscopicOptions = StereoscopicOptions;
+    using DynamicResolutionOptions = filament::DynamicResolutionOptions;
+    using BloomOptions = filament::BloomOptions;
+    using FogOptions = filament::FogOptions;
+    using DepthOfFieldOptions = filament::DepthOfFieldOptions;
+    using VignetteOptions = filament::VignetteOptions;
+    using RenderQuality = filament::RenderQuality;
+    using AmbientOcclusionOptions = filament::AmbientOcclusionOptions;
+    using TemporalAntiAliasingOptions = filament::TemporalAntiAliasingOptions;
+    using MultiSampleAntiAliasingOptions = filament::MultiSampleAntiAliasingOptions;
+    using VsmShadowOptions = filament::VsmShadowOptions;
+    using SoftShadowOptions = filament::SoftShadowOptions;
+    using ScreenSpaceReflectionsOptions = filament::ScreenSpaceReflectionsOptions;
+    using GuardBandOptions = filament::GuardBandOptions;
+    using StereoscopicOptions = filament::StereoscopicOptions;
 
     /**
      * Sets the View's name. Only useful for debugging.
@@ -691,11 +691,12 @@ public:
      * - punctual lights
      *
      * Stereo rendering depends on device and platform support. To check if stereo rendering is
-     * supported, use Engine::isStereoSupported().
+     * supported, use Engine::isStereoSupported(). If stereo rendering is not supported, then the
+     * stereoscopic options have no effect.
      *
      * @param options The stereoscopic options to use on this view
      */
-    void setStereoscopicOptions(StereoscopicOptions const& options);
+    void setStereoscopicOptions(StereoscopicOptions const& options) noexcept;
 
     /**
      * Returns the stereoscopic options associated with this View.
@@ -763,10 +764,10 @@ public:
      * @param handler   Handler to dispatch the callback or nullptr for the default handler.
      */
     template<typename T, void(T::*method)(PickingQueryResult const&)>
-    void pick(uint32_t x, uint32_t y, T* instance, backend::CallbackHandler* handler = nullptr) noexcept {
+    void pick(uint32_t x, uint32_t y, T* instance,
+            backend::CallbackHandler* handler = nullptr) noexcept {
         PickingQuery& query = pick(x, y, [](PickingQueryResult const& result, PickingQuery* pq) {
-            void* user = pq->storage;
-            (*static_cast<T**>(user)->*method)(result);
+            (static_cast<T*>(pq->storage[0])->*method)(result);
         }, handler);
         query.storage[0] = instance;
     }
@@ -783,11 +784,11 @@ public:
      * @param handler   Handler to dispatch the callback or nullptr for the default handler.
      */
     template<typename T, void(T::*method)(PickingQueryResult const&)>
-    void pick(uint32_t x, uint32_t y, T instance, backend::CallbackHandler* handler = nullptr) noexcept {
+    void pick(uint32_t x, uint32_t y, T instance,
+            backend::CallbackHandler* handler = nullptr) noexcept {
         static_assert(sizeof(instance) <= sizeof(PickingQuery::storage), "user data too large");
         PickingQuery& query = pick(x, y, [](PickingQueryResult const& result, PickingQuery* pq) {
-            void* user = pq->storage;
-            T* that = static_cast<T*>(user);
+            T* const that = static_cast<T*>(reinterpret_cast<void*>(pq->storage));
             (that->*method)(result);
             that->~T();
         }, handler);
@@ -804,15 +805,15 @@ public:
      * @param handler   Handler to dispatch the callback or nullptr for the default handler.
      */
     template<typename T>
-    void pick(uint32_t x, uint32_t y, T functor, backend::CallbackHandler* handler = nullptr) noexcept {
+    void pick(uint32_t x, uint32_t y, T functor,
+            backend::CallbackHandler* handler = nullptr) noexcept {
         static_assert(sizeof(functor) <= sizeof(PickingQuery::storage), "functor too large");
         PickingQuery& query = pick(x, y, handler,
                 (PickingQueryResultCallback)[](PickingQueryResult const& result, PickingQuery* pq) {
-            void* user = pq->storage;
-            T& that = *static_cast<T*>(user);
-            that(result);
-            that.~T();
-        });
+                    T* const that = static_cast<T*>(reinterpret_cast<void*>(pq->storage));
+                    that->operator()(result);
+                    that->~T();
+                });
         new(query.storage) T(std::move(functor));
     }
 
