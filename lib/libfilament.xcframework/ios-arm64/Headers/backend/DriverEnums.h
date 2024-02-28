@@ -28,7 +28,8 @@
 
 #include <math/vec4.h>
 
-#include <array>    // FIXME: STL headers are not allowed in public headers
+#include <array>        // FIXME: STL headers are not allowed in public headers
+#include <type_traits>  // FIXME: STL headers are not allowed in public headers
 
 #include <stddef.h>
 #include <stdint.h>
@@ -1209,6 +1210,14 @@ enum class Workaround : uint16_t {
     // The driver has some threads pinned, and we can't easily know on which core, it can hurt
     // performance more if we end-up pinned on the same one.
     DISABLE_THREAD_AFFINITY
+};
+
+//! The type of technique for stereoscopic rendering
+enum class StereoscopicType : uint8_t {
+    // Stereoscopic rendering is performed using instanced rendering technique.
+    INSTANCED,
+    // Stereoscopic rendering is performed using the multiview feature from the graphics backend.
+    MULTIVIEW,
 };
 
 } // namespace filament::backend

@@ -19,9 +19,14 @@
 
 #include <filament/FilamentAPI.h>
 
+#include <backend/DriverEnums.h>
 #include <backend/Platform.h>
 
 #include <utils/compiler.h>
+#include <utils/Invocable.h>
+
+#include <stdint.h>
+#include <stddef.h>
 
 namespace utils {
 class Entity;
@@ -173,6 +178,7 @@ public:
     using Backend = backend::Backend;
     using DriverConfig = backend::Platform::DriverConfig;
     using FeatureLevel = backend::FeatureLevel;
+    using StereoscopicType = backend::StereoscopicType;
 
     /**
      * Config is used to define the memory footprint used by the engine, such as the
@@ -292,6 +298,25 @@ public:
          */
         size_t textureUseAfterFreePoolSize = 0;
 
+        /**
+         * Set to `true` to forcibly disable parallel shader compilation in the backend.
+         * Currently only honored by the GL backend.
+         */
+        bool disableParallelShaderCompile = false;
+
+        /*
+         * The type of technique for stereoscopic rendering.
+         *
+         * This setting determines the algorithm used when stereoscopic rendering is enabled. This
+         * decision applies to the entire Engine for the lifetime of the Engine. E.g., multiple
+         * Views created from the Engine must use the same stereoscopic type.
+         *
+         * Each view can enable stereoscopic rendering via the StereoscopicOptions::enable flag.
+         *
+         * @see View::setStereoscopicOptions
+         */
+        StereoscopicType stereoscopicType = StereoscopicType::INSTANCED;
+
         /*
          * The number of eyes to render when stereoscopic rendering is enabled. Supported values are
          * between 1 and Engine::getMaxStereoscopicEyes() (inclusive).
@@ -300,11 +325,23 @@ public:
          * @see Engine::getMaxStereoscopicEyes
          */
         uint8_t stereoscopicEyeCount = 2;
+
+        /*
+         * Size in MiB of the frame graph texture cache. This should be adjusted based on the
+         * size of used render targets (typically the screen).
+         */
+        uint32_t resourceAllocatorCacheSizeMB = 64;
+
+        /*
+         * This value determines for how many frames are texture entries kept in the cache.
+         * The default value of 30 corresponds to about half a second at 60 fps.
+         */
+        uint32_t resourceAllocatorCacheMaxAge = 30;
     };
 
 
 #if UTILS_HAS_THREADING
-    using CreateCallback = void(void* user, void* token);
+    using CreateCallback = void(void* UTILS_NULLABLE user, void* UTILS_NONNULL token);
 #endif
 
     /**
@@ -343,7 +380,7 @@ public:
          *
          * @return A reference to this Builder for chaining calls.
          */
-        Builder& platform(Platform* platform) noexcept;
+        Builder& platform(Platform* UTILS_NULLABLE platform) noexcept;
 
         /**
          * @param config    A pointer to optional parameters to specify memory size
@@ -351,7 +388,7 @@ public:
          *
          * @return A reference to this Builder for chaining calls.
          */
-        Builder& config(const Config* config) noexcept;
+        Builder& config(const Config* UTILS_NULLABLE config) noexcept;
 
         /**
          * @param sharedContext A platform-dependant context used as a shared context
@@ -359,7 +396,7 @@ public:
          *
          * @return A reference to this Builder for chaining calls.
          */
-        Builder& sharedContext(void* sharedContext) noexcept;
+        Builder& sharedContext(void* UTILS_NULLABLE sharedContext) noexcept;
 
         /**
          * @param featureLevel The feature level at which initialize Filament.
@@ -374,7 +411,7 @@ public:
          * @param callback  Callback called once the engine is initialized and it is safe to
          *                  call Engine::getEngine().
          */
-        void build(utils::Invocable<void(void* token)>&& callback) const;
+        void build(utils::Invocable<void(void* UTILS_NONNULL token)>&& callback) const;
 #endif
 
         /**
@@ -389,16 +426,17 @@ public:
          *              allocate the command buffer. If exceptions are disabled, this condition if
          *              fatal and this function will abort.
          */
-        Engine* build() const;
+        Engine* UTILS_NULLABLE build() const;
     };
 
     /**
      * Backward compatibility helper to create an Engine.
      * @see Builder
      */
-    static inline Engine* create(Backend backend = Backend::DEFAULT,
-            Platform* platform = nullptr, void* sharedContext = nullptr,
-            const Config* config = nullptr) {
+    static inline Engine* UTILS_NULLABLE create(Backend backend = Backend::DEFAULT,
+            Platform* UTILS_NULLABLE platform = nullptr,
+            void* UTILS_NULLABLE sharedContext = nullptr,
+            const Config* UTILS_NULLABLE config = nullptr) {
         return Engine::Builder()
                 .backend(backend)
                 .platform(platform)
@@ -413,16 +451,18 @@ public:
      * Backward compatibility helper to create an Engine asynchronously.
      * @see Builder
      */
-    static inline void createAsync(CreateCallback callback, void* user,
+    static inline void createAsync(CreateCallback callback,
+            void* UTILS_NULLABLE user,
             Backend backend = Backend::DEFAULT,
-            Platform* platform = nullptr, void* sharedContext = nullptr,
-            const Config* config = nullptr) {
+            Platform* UTILS_NULLABLE platform = nullptr,
+            void* UTILS_NULLABLE sharedContext = nullptr,
+            const Config* UTILS_NULLABLE config = nullptr) {
         Engine::Builder()
                 .backend(backend)
                 .platform(platform)
                 .sharedContext(sharedContext)
                 .config(config)
-                .build([callback, user](void* token) {
+                .build([callback, user](void* UTILS_NONNULL token) {
                     callback(user, token);
                 });
     }
@@ -439,7 +479,7 @@ public:
      * allocate the command buffer. If exceptions are disabled, this condition if fatal and
      * this function will abort.
      */
-    static Engine* getEngine(void* token);
+    static Engine* UTILS_NULLABLE getEngine(void* UTILS_NONNULL token);
 #endif
 
 
@@ -469,7 +509,7 @@ public:
      * \remark
      * This method is thread-safe.
      */
-    static void destroy(Engine** engine);
+    static void destroy(Engine* UTILS_NULLABLE* UTILS_NULLABLE engine);
 
     /**
      * Destroy the Engine instance and all associated resources.
@@ -496,7 +536,7 @@ public:
      * \remark
      * This method is thread-safe.
      */
-    static void destroy(Engine* engine);
+    static void destroy(Engine* UTILS_NULLABLE engine);
 
     /**
      * Query the feature level supported by the selected backend.
@@ -644,11 +684,11 @@ public:
      *                     `ANativeWindow*`.
      * @param flags One or more configuration flags as defined in `SwapChain`.
      *
-     * @return A pointer to the newly created SwapChain or nullptr if it couldn't be created.
+     * @return A pointer to the newly created SwapChain.
      *
      * @see Renderer.beginFrame()
      */
-    SwapChain* createSwapChain(void* nativeWindow, uint64_t flags = 0) noexcept;
+    SwapChain* UTILS_NONNULL createSwapChain(void* UTILS_NULLABLE nativeWindow, uint64_t flags = 0) noexcept;
 
 
     /**
@@ -658,42 +698,42 @@ public:
       * @param height   Height of the drawing buffer in pixels.
      * @param flags     One or more configuration flags as defined in `SwapChain`.
      *
-     * @return A pointer to the newly created SwapChain or nullptr if it couldn't be created.
+     * @return A pointer to the newly created SwapChain.
      *
      * @see Renderer.beginFrame()
      */
-    SwapChain* createSwapChain(uint32_t width, uint32_t height, uint64_t flags = 0) noexcept;
+    SwapChain* UTILS_NONNULL createSwapChain(uint32_t width, uint32_t height, uint64_t flags = 0) noexcept;
 
     /**
      * Creates a renderer associated to this engine.
      *
      * A Renderer is intended to map to a *window* on screen.
      *
-     * @return A pointer to the newly created Renderer or nullptr if it couldn't be created.
+     * @return A pointer to the newly created Renderer.
      */
-    Renderer* createRenderer() noexcept;
+    Renderer* UTILS_NONNULL createRenderer() noexcept;
 
     /**
      * Creates a View.
      *
-     * @return A pointer to the newly created View or nullptr if it couldn't be created.
+     * @return A pointer to the newly created View.
      */
-    View* createView() noexcept;
+    View* UTILS_NONNULL createView() noexcept;
 
     /**
      * Creates a Scene.
      *
-     * @return A pointer to the newly created Scene or nullptr if it couldn't be created.
+     * @return A pointer to the newly created Scene.
      */
-    Scene* createScene() noexcept;
+    Scene* UTILS_NONNULL createScene() noexcept;
 
     /**
      * Creates a Camera component.
      *
      * @param entity Entity to add the camera component to.
-     * @return A pointer to the newly created Camera or nullptr if it couldn't be created.
+     * @return A pointer to the newly created Camera.
      */
-    Camera* createCamera(utils::Entity entity) noexcept;
+    Camera* UTILS_NONNULL createCamera(utils::Entity entity) noexcept;
 
     /**
      * Returns the Camera component of the given entity.
@@ -703,7 +743,7 @@ public:
      *         have a Camera component. The pointer is valid until destroyCameraComponent()
      *         is called or the entity itself is destroyed.
      */
-    Camera* getCameraComponent(utils::Entity entity) noexcept;
+    Camera* UTILS_NULLABLE getCameraComponent(utils::Entity entity) noexcept;
 
     /**
      * Destroys the Camera component associated with the given entity.
@@ -715,17 +755,17 @@ public:
     /**
      * Creates a Fence.
      *
-     * @return A pointer to the newly created Fence or nullptr if it couldn't be created.
+     * @return A pointer to the newly created Fence.
      */
-    Fence* createFence() noexcept;
+    Fence* UTILS_NONNULL createFence() noexcept;
 
-    bool destroy(const BufferObject* p);        //!< Destroys a BufferObject object.
-    bool destroy(const VertexBuffer* p);        //!< Destroys an VertexBuffer object.
-    bool destroy(const Fence* p);               //!< Destroys a Fence object.
-    bool destroy(const IndexBuffer* p);         //!< Destroys an IndexBuffer object.
-    bool destroy(const SkinningBuffer* p);      //!< Destroys a SkinningBuffer object.
-    bool destroy(const MorphTargetBuffer* p);   //!< Destroys a MorphTargetBuffer object.
-    bool destroy(const IndirectLight* p);       //!< Destroys an IndirectLight object.
+    bool destroy(const BufferObject* UTILS_NULLABLE p);         //!< Destroys a BufferObject object.
+    bool destroy(const VertexBuffer* UTILS_NULLABLE p);         //!< Destroys an VertexBuffer object.
+    bool destroy(const Fence* UTILS_NULLABLE p);                //!< Destroys a Fence object.
+    bool destroy(const IndexBuffer* UTILS_NULLABLE p);          //!< Destroys an IndexBuffer object.
+    bool destroy(const SkinningBuffer* UTILS_NULLABLE p);       //!< Destroys a SkinningBuffer object.
+    bool destroy(const MorphTargetBuffer* UTILS_NULLABLE p);    //!< Destroys a MorphTargetBuffer object.
+    bool destroy(const IndirectLight* UTILS_NULLABLE p);        //!< Destroys an IndirectLight object.
 
     /**
      * Destroys a Material object
@@ -735,38 +775,38 @@ public:
      * @exception utils::PreConditionPanic is thrown if some MaterialInstances remain.
      * no-op if exceptions are disabled and some MaterialInstances remain.
      */
-    bool destroy(const Material* p);
-    bool destroy(const MaterialInstance* p);    //!< Destroys a MaterialInstance object.
-    bool destroy(const Renderer* p);            //!< Destroys a Renderer object.
-    bool destroy(const Scene* p);               //!< Destroys a Scene object.
-    bool destroy(const Skybox* p);              //!< Destroys a SkyBox object.
-    bool destroy(const ColorGrading* p);        //!< Destroys a ColorGrading object.
-    bool destroy(const SwapChain* p);           //!< Destroys a SwapChain object.
-    bool destroy(const Stream* p);              //!< Destroys a Stream object.
-    bool destroy(const Texture* p);             //!< Destroys a Texture object.
-    bool destroy(const RenderTarget* p);        //!< Destroys a RenderTarget object.
-    bool destroy(const View* p);                //!< Destroys a View object.
-    bool destroy(const InstanceBuffer* p);      //!< Destroys an InstanceBuffer object.
-    void destroy(utils::Entity e);              //!< Destroys all filament-known components from this entity
+    bool destroy(const Material* UTILS_NULLABLE p);
+    bool destroy(const MaterialInstance* UTILS_NULLABLE p); //!< Destroys a MaterialInstance object.
+    bool destroy(const Renderer* UTILS_NULLABLE p);         //!< Destroys a Renderer object.
+    bool destroy(const Scene* UTILS_NULLABLE p);            //!< Destroys a Scene object.
+    bool destroy(const Skybox* UTILS_NULLABLE p);           //!< Destroys a SkyBox object.
+    bool destroy(const ColorGrading* UTILS_NULLABLE p);     //!< Destroys a ColorGrading object.
+    bool destroy(const SwapChain* UTILS_NULLABLE p);        //!< Destroys a SwapChain object.
+    bool destroy(const Stream* UTILS_NULLABLE p);           //!< Destroys a Stream object.
+    bool destroy(const Texture* UTILS_NULLABLE p);          //!< Destroys a Texture object.
+    bool destroy(const RenderTarget* UTILS_NULLABLE p);     //!< Destroys a RenderTarget object.
+    bool destroy(const View* UTILS_NULLABLE p);             //!< Destroys a View object.
+    bool destroy(const InstanceBuffer* UTILS_NULLABLE p);   //!< Destroys an InstanceBuffer object.
+    void destroy(utils::Entity e);    //!< Destroys all filament-known components from this entity
 
-    bool isValid(const BufferObject* p);        //!< Tells whether a BufferObject object is valid
-    bool isValid(const VertexBuffer* p);        //!< Tells whether an VertexBuffer object is valid
-    bool isValid(const Fence* p);               //!< Tells whether a Fence object is valid
-    bool isValid(const IndexBuffer* p);         //!< Tells whether an IndexBuffer object is valid
-    bool isValid(const SkinningBuffer* p);      //!< Tells whether a SkinningBuffer object is valid
-    bool isValid(const MorphTargetBuffer* p);   //!< Tells whether a MorphTargetBuffer object is valid
-    bool isValid(const IndirectLight* p);       //!< Tells whether an IndirectLight object is valid
-    bool isValid(const Material* p);            //!< Tells whether an IndirectLight object is valid
-    bool isValid(const Renderer* p);            //!< Tells whether a Renderer object is valid
-    bool isValid(const Scene* p);               //!< Tells whether a Scene object is valid
-    bool isValid(const Skybox* p);              //!< Tells whether a SkyBox object is valid
-    bool isValid(const ColorGrading* p);        //!< Tells whether a ColorGrading object is valid
-    bool isValid(const SwapChain* p);           //!< Tells whether a SwapChain object is valid
-    bool isValid(const Stream* p);              //!< Tells whether a Stream object is valid
-    bool isValid(const Texture* p);             //!< Tells whether a Texture object is valid
-    bool isValid(const RenderTarget* p);        //!< Tells whether a RenderTarget object is valid
-    bool isValid(const View* p);                //!< Tells whether a View object is valid
-    bool isValid(const InstanceBuffer* p);      //!< Tells whether an InstanceBuffer object is valid
+    bool isValid(const BufferObject* UTILS_NULLABLE p);        //!< Tells whether a BufferObject object is valid
+    bool isValid(const VertexBuffer* UTILS_NULLABLE p);        //!< Tells whether an VertexBuffer object is valid
+    bool isValid(const Fence* UTILS_NULLABLE p);               //!< Tells whether a Fence object is valid
+    bool isValid(const IndexBuffer* UTILS_NULLABLE p);         //!< Tells whether an IndexBuffer object is valid
+    bool isValid(const SkinningBuffer* UTILS_NULLABLE p);      //!< Tells whether a SkinningBuffer object is valid
+    bool isValid(const MorphTargetBuffer* UTILS_NULLABLE p);   //!< Tells whether a MorphTargetBuffer object is valid
+    bool isValid(const IndirectLight* UTILS_NULLABLE p);       //!< Tells whether an IndirectLight object is valid
+    bool isValid(const Material* UTILS_NULLABLE p);            //!< Tells whether an IndirectLight object is valid
+    bool isValid(const Renderer* UTILS_NULLABLE p);            //!< Tells whether a Renderer object is valid
+    bool isValid(const Scene* UTILS_NULLABLE p);               //!< Tells whether a Scene object is valid
+    bool isValid(const Skybox* UTILS_NULLABLE p);              //!< Tells whether a SkyBox object is valid
+    bool isValid(const ColorGrading* UTILS_NULLABLE p);        //!< Tells whether a ColorGrading object is valid
+    bool isValid(const SwapChain* UTILS_NULLABLE p);           //!< Tells whether a SwapChain object is valid
+    bool isValid(const Stream* UTILS_NULLABLE p);              //!< Tells whether a Stream object is valid
+    bool isValid(const Texture* UTILS_NULLABLE p);             //!< Tells whether a Texture object is valid
+    bool isValid(const RenderTarget* UTILS_NULLABLE p);        //!< Tells whether a RenderTarget object is valid
+    bool isValid(const View* UTILS_NULLABLE p);                //!< Tells whether a View object is valid
+    bool isValid(const InstanceBuffer* UTILS_NULLABLE p);      //!< Tells whether an InstanceBuffer object is valid
 
     /**
      * Kicks the hardware thread (e.g. the OpenGL, Vulkan or Metal thread) and blocks until
@@ -806,7 +846,7 @@ public:
      *
      * @return A pointer to the default Material instance (a singleton).
      */
-    const Material* getDefaultMaterial() const noexcept;
+    Material const* UTILS_NONNULL getDefaultMaterial() const noexcept;
 
     /**
      * Returns the resolved backend.
@@ -837,7 +877,7 @@ public:
      * @return A pointer to the Platform object that was provided to Engine::create, or the
      * Filament-created one.
      */
-    Platform* getPlatform() const noexcept;
+    Platform* UTILS_NULLABLE getPlatform() const noexcept;
 
     /**
      * Allocate a small amount of memory directly in the command stream. The allocated memory is
@@ -850,7 +890,7 @@ public:
      * @note there is no need to destroy this buffer, it will be freed automatically when
      *       the current command buffer is executed.
      */
-    void* streamAlloc(size_t size, size_t alignment = alignof(double)) noexcept;
+    void* UTILS_NULLABLE streamAlloc(size_t size, size_t alignment = alignof(double)) noexcept;
 
     /**
       * Invokes one iteration of the render loop, used only on single-threaded platforms.

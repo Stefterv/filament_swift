@@ -20,3 +20,5 @@ To update the filament c++ library to the latest version edit the `$VERSION` var
 $ ./release.sh
 
 ```
+
+If the command release fails to run, delete the `filament/out` folder to reset and build from scratch
