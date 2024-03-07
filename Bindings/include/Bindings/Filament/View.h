@@ -1117,7 +1117,7 @@ typedef struct StereoscopicOptions {
 - (void) setDebugCamera: (nonnull Camera*) camera;
 
 //! debugging: returns a Camera from the point of view of *the* dominant directional light used for shadowing.
-- (nonnull Camera*) getDirectionalLightCamera;
+- (nonnull Camera*) getDirectionalShadowCamera;
 
 
 /** Result of a picking query */

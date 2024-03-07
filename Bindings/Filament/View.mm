@@ -216,8 +216,8 @@
     
 }
 
-- (nonnull Camera *)getDirectionalLightCamera {
-    return [[Camera alloc] init:(void*)nativeView->getDirectionalLightCamera()];
+- (nonnull Camera *)getDirectionalShadowCamera {
+    return [[Camera alloc] init:(void*)nativeView->getDirectionalShadowCamera()];
 }
 
 - (Dithering)getDithering {
