@@ -1,4 +1,4 @@
-name: Build
+name: Update
 
 on:
   workflow_dispatch:
