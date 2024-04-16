@@ -1,8 +1,16 @@
 #!/bin/bash
 set -e
 
-VERSION="1.50.6"
-TYPE=${1:-"release"}
+while getopts v:t: flag
+do
+    case "${flag}" in
+        v) version=${OPTARG};;
+        t) type=${OPTARG};;
+    esac
+done
+
+VERSION=$version
+TYPE=$type
 
 if [ ! -d "filament" ]
 then

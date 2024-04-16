@@ -2,6 +2,11 @@ name: Build
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+          description: 'Filament Version'
+          required: true
+          type: string
 
 jobs:
   update-filament:
@@ -11,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Download latest filament and generate library files
         run: |
-          ./release.sh
+          ./release.sh -v ${{ inputs.version }}  -t release
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
