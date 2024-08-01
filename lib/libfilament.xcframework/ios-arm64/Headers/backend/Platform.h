@@ -41,6 +41,26 @@ public:
     struct Fence {};
     struct Stream {};
 
+    /**
+     * The type of technique for stereoscopic rendering. (Note that the materials used will need to
+     * be compatible with the chosen technique.)
+     */
+    enum class StereoscopicType : uint8_t {
+        /**
+         * No stereoscopic rendering
+         */
+        NONE,
+        /**
+         * Stereoscopic rendering is performed using instanced rendering technique.
+         */
+        INSTANCED,
+        /**
+         * Stereoscopic rendering is performed using the multiview feature from the graphics
+         * backend.
+         */
+        MULTIVIEW,
+    };
+
     struct DriverConfig {
         /**
          * Size of handle arena in bytes. Setting to 0 indicates default value is to be used.
@@ -54,6 +74,8 @@ public:
          * a draw call. 0 disables completely. Currently only respected by the Metal backend.
          */
         size_t textureUseAfterFreePoolSize = 0;
+
+        size_t metalUploadBufferSizeBytes = 512 * 1024;
 
         /**
          * Set to `true` to forcibly disable parallel shader compilation in the backend.
@@ -71,6 +93,11 @@ public:
          * GLES 3.x backends.
          */
         bool forceGLES2Context = false;
+
+        /**
+         * Sets the technique for stereoscopic rendering.
+         */
+        StereoscopicType stereoscopicType = StereoscopicType::NONE;
     };
 
     Platform() noexcept;
