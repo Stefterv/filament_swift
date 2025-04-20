@@ -20,6 +20,9 @@
 // NOTE: this header should not include STL headers
 
 #include <utils/compiler.h>
+#include <utils/ostream.h>
+
+#include <string_view>
 
 #include <assert.h>
 #include <stddef.h>
@@ -181,6 +184,10 @@ public:
     };
 
 private:
+#if !defined(NDEBUG)
+    friend io::ostream& operator<<(io::ostream& out, const CString& rhs);
+#endif
+
     struct Data {
         size_type length;
     };
@@ -192,16 +199,13 @@ private:
     };
 
     int compare(const CString& rhs) const noexcept {
-        size_type const lhs_size = size();
-        size_type const rhs_size = rhs.size();
-        if (lhs_size < rhs_size) return -1;
-        if (lhs_size > rhs_size) return 1;
-        return strncmp(data(), rhs.data(), size());
+        auto const l = std::string_view{data(), size()};
+        auto const r = std::string_view{rhs.data(), rhs.size()};
+        return l.compare(r);
     }
 
     friend bool operator==(CString const& lhs, CString const& rhs) noexcept {
-        return (lhs.data() == rhs.data()) ||
-               ((lhs.size() == rhs.size()) && !strncmp(lhs.data(), rhs.data(), lhs.size()));
+        return lhs.compare(rhs) == 0;
     }
     friend bool operator!=(CString const& lhs, CString const& rhs) noexcept {
         return !(lhs == rhs);

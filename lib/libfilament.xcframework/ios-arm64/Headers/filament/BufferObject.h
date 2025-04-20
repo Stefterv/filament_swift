@@ -25,6 +25,7 @@
 #include <backend/BufferDescriptor.h>
 
 #include <utils/compiler.h>
+#include <utils/StaticString.h>
 
 #include <stdint.h>
 #include <stddef.h>
@@ -54,7 +55,7 @@ public:
     using BufferDescriptor = backend::BufferDescriptor;
     using BindingType = backend::BufferObjectBinding;
 
-    class Builder : public BuilderBase<BuilderDetails> {
+    class Builder : public BuilderBase<BuilderDetails>, public BuilderNameMixin<Builder> {
         friend struct BuilderDetails;
     public:
         Builder() noexcept;
@@ -73,10 +74,37 @@ public:
 
         /**
          * The binding type for this buffer object. (defaults to VERTEX)
-         * @param BindingType Distinguishes between SSBO, VBO, etc. For now this must be VERTEX.
+         * @param bindingType Distinguishes between SSBO, VBO, etc. For now this must be VERTEX.
          * @return A reference to this Builder for chaining calls.
          */
         Builder& bindingType(BindingType bindingType) noexcept;
+
+        /**
+         * Associate an optional name with this BufferObject for debugging purposes.
+         *
+         * name will show in error messages and should be kept as short as possible. The name is
+         * truncated to a maximum of 128 characters.
+         *
+         * The name string is copied during this method so clients may free its memory after
+         * the function returns.
+         *
+         * @param name A string to identify this BufferObject
+         * @param len Length of name, should be less than or equal to 128
+         * @return This Builder, for chaining calls.
+         * @deprecated Use name(utils::StaticString const&) instead.
+         */
+        UTILS_DEPRECATED
+        Builder& name(const char* UTILS_NONNULL name, size_t len) noexcept;
+
+        /**
+         * Associate an optional name with this BufferObject for debugging purposes.
+         *
+         * name will show in error messages and should be kept as short as possible.
+         *
+         * @param name A string literal to identify this BufferObject
+         * @return This Builder, for chaining calls.
+         */
+        Builder& name(utils::StaticString const& name) noexcept;
 
         /**
          * Creates the BufferObject and returns a pointer to it. After creation, the buffer

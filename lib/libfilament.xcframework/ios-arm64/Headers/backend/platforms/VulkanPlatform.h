@@ -18,6 +18,7 @@
 #define TNT_FILAMENT_BACKEND_PLATFORMS_VULKANPLATFORM_H
 
 #include <backend/Platform.h>
+#include <backend/DriverEnums.h>
 
 #include <bluevk/BlueVK.h>
 
@@ -71,6 +72,9 @@ public:
         // where the gpu only has one graphics queue. Then the client needs to ensure that no
         // concurrent access can occur.
         uint32_t graphicsQueueIndex = 0xFFFFFFFF;
+        bool debugUtilsSupported = false;
+        bool debugMarkersSupported = false;
+        bool multiviewSupported = false;
     };
 
     /**
@@ -88,6 +92,8 @@ public:
         VkFormat colorFormat = VK_FORMAT_UNDEFINED;
         VkFormat depthFormat = VK_FORMAT_UNDEFINED;
         VkExtent2D extent = {0, 0};
+        uint32_t layerCount = 1;
+        bool isProtected = false;
     };
 
     struct ImageSyncData {
@@ -98,10 +104,6 @@ public:
 
         // Semaphore to be signaled once the image is available.
         VkSemaphore imageReadySemaphore = VK_NULL_HANDLE;
-
-        // A function called right before vkQueueSubmit. After this call, the image must be 
-        // available. This pointer can be null if imageReadySemaphore is not VK_NULL_HANDLE.
-        std::function<void(SwapChainPtr handle)> explicitImageReadyWait = nullptr;
     };
 
     VulkanPlatform();
@@ -200,6 +202,13 @@ public:
     virtual bool hasResized(SwapChainPtr handle);
 
     /**
+     * Check if the surface is protected.
+     * @param handle             The handle returned by createSwapChain()
+     * @return                   Whether the swapchain is protected
+     */
+    virtual bool isProtected(SwapChainPtr handle);
+
+    /**
      * Carry out a recreation of the swapchain.
      * @param handle             The handle returned by createSwapChain()
      * @return                   Result of the recreation
@@ -267,12 +276,120 @@ public:
      */
     VkQueue getGraphicsQueue() const noexcept;
 
+    /**
+    * @return The family index of the protected graphics queue selected for the
+    *          Vulkan backend.
+    */
+    uint32_t getProtectedGraphicsQueueFamilyIndex() const noexcept;
+
+    /**
+     * @return The index of the protected graphics queue (if there are multiple
+     *          graphics queues) selected for the Vulkan backend.
+     */
+    uint32_t getProtectedGraphicsQueueIndex() const noexcept;
+
+    /**
+     * @return The protected queue that was selected for the Vulkan backend.
+     */
+    VkQueue getProtectedGraphicsQueue() const noexcept;
+
+    struct ExternalImageMetadata {
+        /**
+         * The width of the external image
+         */
+        uint32_t width;
+
+        /**
+         * The height of the external image
+         */
+        uint32_t height;
+
+        /**
+         * The layerCount of the external image
+         */
+        uint32_t layerCount;
+
+        /**
+         * The layer count of the external image
+         */
+        uint32_t layers;
+
+        /**
+         * The numbers of samples per texel
+         */
+        VkSampleCountFlagBits samples;
+
+        /**
+         * The format of the external image
+         */
+        VkFormat format;
+
+        /**
+         * An external buffer can be protected. This tells you if it is.
+         */
+        bool isProtected;
+
+        /**
+         * The type of external format (opaque int) if used.
+         */
+        uint64_t externalFormat;
+
+        /**
+         * Image usage
+         */
+        VkImageUsageFlags usage;
+
+        /**
+         * Allocation size
+         */
+        VkDeviceSize allocationSize;
+
+        /**
+         * Heap information
+         */
+        uint32_t memoryTypeBits;
+    };
+    virtual ExternalImageMetadata getExternalImageMetadata(ExternalImageHandleRef externalImage);
+
+    using ImageData = std::pair<VkImage, VkDeviceMemory>;
+    virtual ImageData createExternalImageData(ExternalImageHandleRef externalImage,
+            const ExternalImageMetadata& metadata, uint32_t memoryTypeIndex,
+            VkImageUsageFlags usage);
+
+    virtual VkSampler createExternalSampler(SamplerYcbcrConversion chroma,
+            SamplerParams sampler, uint32_t internalFormat);
+
+    virtual VkImageView createExternalImageView(SamplerYcbcrConversion chroma,
+            uint32_t internalFormat, VkImage image, VkImageSubresourceRange range,
+            VkImageViewType viewType, VkComponentMapping swizzle);
+
+protected:
+    virtual ExtensionSet getSwapchainInstanceExtensions() const;
+
+    using SurfaceBundle = std::tuple<VkSurfaceKHR, VkExtent2D>;
+    virtual SurfaceBundle createVkSurfaceKHR(void* nativeWindow, VkInstance instance,
+            uint64_t flags) const noexcept;
+
 private:
-    static ExtensionSet getSwapchainInstanceExtensions();
+    // Platform dependent helper methods
+    static ExtensionSet getSwapchainInstanceExtensionsImpl();
+
+    static ExternalImageMetadata getExternalImageMetadataImpl(ExternalImageHandleRef externalImage,
+            VkDevice device);
+
+    static ImageData createExternalImageDataImpl(ExternalImageHandleRef externalImage,
+            VkDevice device, const ExternalImageMetadata& metadata, uint32_t memoryTypeIndex,
+            VkImageUsageFlags usage);
+    static VkSampler createExternalSamplerImpl(VkDevice device,
+            SamplerYcbcrConversion chroma, SamplerParams sampler,
+            uint32_t internalFormat);
+    static VkImageView createExternalImageViewImpl(VkDevice device,
+            SamplerYcbcrConversion chroma, uint32_t internalFormat, VkImage image,
+            VkImageSubresourceRange range, VkImageViewType viewType,
+            VkComponentMapping swizzle);
 
     // Platform dependent helper methods
-    using SurfaceBundle = std::tuple<VkSurfaceKHR, VkExtent2D>;
-    static SurfaceBundle createVkSurfaceKHR(void* nativeWindow, VkInstance instance,
+    static SurfaceBundle createVkSurfaceKHRImpl(void* nativeWindow, VkInstance instance,
             uint64_t flags) noexcept;
 
     friend struct VulkanPlatformPrivate;

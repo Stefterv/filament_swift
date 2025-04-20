@@ -19,20 +19,23 @@
 #ifndef TNT_FILAMENT_BACKEND_DRIVERENUMS_H
 #define TNT_FILAMENT_BACKEND_DRIVERENUMS_H
 
-#include <utils/BitmaskEnum.h>
 #include <utils/unwindows.h> // Because we define ERROR in the FenceStatus enum.
 
 #include <backend/Platform.h>
 #include <backend/PresentCallable.h>
 
+#include <utils/BitmaskEnum.h>
+#include <utils/FixedCapacityVector.h>
 #include <utils/Invocable.h>
+#include <utils/compiler.h>
+#include <utils/debug.h>
 #include <utils/ostream.h>
 
 #include <math/vec4.h>
 
-#include <array>        // FIXME: STL headers are not allowed in public headers
-#include <type_traits>  // FIXME: STL headers are not allowed in public headers
-#include <variant>      // FIXME: STL headers are not allowed in public headers
+#include <array>
+#include <type_traits>
+#include <variant>
 
 #include <stddef.h>
 #include <stdint.h>
@@ -97,6 +100,8 @@ static constexpr size_t MAX_VERTEX_ATTRIBUTE_COUNT  = 16;   // This is guarantee
 static constexpr size_t MAX_SAMPLER_COUNT           = 62;   // Maximum needed at feature level 3.
 static constexpr size_t MAX_VERTEX_BUFFER_COUNT     = 16;   // Max number of bound buffer objects.
 static constexpr size_t MAX_SSBO_COUNT              = 4;    // This is guaranteed by OpenGL ES.
+static constexpr size_t MAX_DESCRIPTOR_SET_COUNT    = 4;    // This is guaranteed by Vulkan.
+static constexpr size_t MAX_DESCRIPTOR_COUNT        = 64;   // per set
 
 static constexpr size_t MAX_PUSH_CONSTANT_COUNT     = 32;   // Vulkan 1.1 spec allows for 128-byte
                                                             // of push constant (we assume 4-byte
@@ -121,6 +126,10 @@ static_assert(MAX_VERTEX_BUFFER_COUNT <= MAX_VERTEX_ATTRIBUTE_COUNT,
 static constexpr size_t CONFIG_UNIFORM_BINDING_COUNT = 9;   // This is guaranteed by OpenGL ES.
 static constexpr size_t CONFIG_SAMPLER_BINDING_COUNT = 4;   // This is guaranteed by OpenGL ES.
 
+static constexpr uint8_t EXTERNAL_SAMPLER_DATA_INDEX_UNUSED =
+        uint8_t(-1);// Case where the descriptor set binding isnt using any external sampler state
+                     // and therefore doesn't have a valid entry.
+
 /**
  * Defines the backend's feature levels.
  */
@@ -139,7 +148,8 @@ enum class Backend : uint8_t {
     OPENGL = 1,   //!< Selects the OpenGL/ES driver (default on Android)
     VULKAN = 2,   //!< Selects the Vulkan driver if the platform supports it (default on Linux/Windows)
     METAL = 3,    //!< Selects the Metal driver if the platform supports it (default on MacOS/iOS).
-    NOOP = 4,     //!< Selects the no-op driver for testing purposes.
+    WEBGPU = 4,   //!< Selects the Webgpu driver if the platform supports webgpu.
+    NOOP = 5,     //!< Selects the no-op driver for testing purposes.
 };
 
 enum class TimerQueryResult : int8_t {
@@ -158,6 +168,8 @@ static constexpr const char* backendToString(Backend backend) {
             return "Vulkan";
         case Backend::METAL:
             return "Metal";
+        case Backend::WEBGPU:
+            return "WebGPU";
         default:
             return "Unknown";
     }
@@ -174,6 +186,7 @@ enum class ShaderLanguage {
     SPIRV = 2,
     MSL = 3,
     METAL_LIBRARY = 4,
+    WGSL = 5,
 };
 
 static constexpr const char* shaderLanguageToString(ShaderLanguage shaderLanguage) {
@@ -188,8 +201,75 @@ static constexpr const char* shaderLanguageToString(ShaderLanguage shaderLanguag
             return "MSL";
         case ShaderLanguage::METAL_LIBRARY:
             return "Metal precompiled library";
+        case ShaderLanguage::WGSL:
+            return "WGSL";
     }
 }
+
+enum class ShaderStage : uint8_t {
+    VERTEX = 0,
+    FRAGMENT = 1,
+    COMPUTE = 2
+};
+
+static constexpr size_t PIPELINE_STAGE_COUNT = 2;
+enum class ShaderStageFlags : uint8_t {
+    NONE        =    0,
+    VERTEX      =    0x1,
+    FRAGMENT    =    0x2,
+    COMPUTE     =    0x4,
+    ALL_SHADER_STAGE_FLAGS = VERTEX | FRAGMENT | COMPUTE
+};
+
+static inline constexpr bool hasShaderType(ShaderStageFlags flags, ShaderStage type) noexcept {
+    switch (type) {
+        case ShaderStage::VERTEX:
+            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::VERTEX));
+        case ShaderStage::FRAGMENT:
+            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::FRAGMENT));
+        case ShaderStage::COMPUTE:
+            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::COMPUTE));
+    }
+}
+
+enum class DescriptorType : uint8_t {
+    UNIFORM_BUFFER,
+    SHADER_STORAGE_BUFFER,
+    SAMPLER,
+    INPUT_ATTACHMENT,
+    SAMPLER_EXTERNAL
+};
+
+enum class DescriptorFlags : uint8_t {
+    NONE = 0x00,
+    DYNAMIC_OFFSET = 0x01
+};
+
+using descriptor_set_t = uint8_t;
+
+using descriptor_binding_t = uint8_t;
+
+struct DescriptorSetLayoutBinding {
+    DescriptorType type;
+    ShaderStageFlags stageFlags;
+    descriptor_binding_t binding;
+    DescriptorFlags flags = DescriptorFlags::NONE;
+    uint16_t count = 0;
+
+    //  TODO: uncomment when needed.  Note that this class is used as hash key.  We need to ensure
+    //  no uninitialized padding bytes.
+    //    uint8_t externalSamplerDataIndex = EXTERNAL_SAMPLER_DATA_INDEX_UNUSED;
+
+    friend inline bool operator==(DescriptorSetLayoutBinding const& lhs,
+            DescriptorSetLayoutBinding const& rhs) noexcept {
+        return lhs.type == rhs.type &&
+               lhs.flags == rhs.flags &&
+               lhs.count == rhs.count &&
+               lhs.stageFlags == rhs.stageFlags;
+//               lhs.stageFlags == rhs.stageFlags &&
+//               lhs.externalSamplerDataIndex == rhs.externalSamplerDataIndex;
+    }
+};
 
 /**
  * Bitmask for selecting render buffers
@@ -249,8 +329,19 @@ struct Viewport {
     int32_t right() const noexcept { return left + int32_t(width); }
     //! get the top coordinate in window space of the viewport
     int32_t top() const noexcept { return bottom + int32_t(height); }
-};
 
+    friend bool operator==(Viewport const& lhs, Viewport const& rhs) noexcept {
+        // clang can do this branchless with xor/or
+        return lhs.left == rhs.left && lhs.bottom == rhs.bottom &&
+               lhs.width == rhs.width && lhs.height == rhs.height;
+    }
+
+    friend bool operator!=(Viewport const& lhs, Viewport const& rhs) noexcept {
+        // clang is being dumb and uses branches
+        return bool(((lhs.left ^ rhs.left) | (lhs.bottom ^ rhs.bottom)) |
+                    ((lhs.width ^ rhs.width) | (lhs.height ^ rhs.height)));
+    }
+};
 
 /**
  * Specifies the mapping of the near and far clipping plane to window coordinates.
@@ -268,15 +359,6 @@ enum class FenceStatus : int8_t {
     ERROR = -1,                 //!< An error occurred. The Fence condition is not satisfied.
     CONDITION_SATISFIED = 0,    //!< The Fence condition is satisfied.
     TIMEOUT_EXPIRED = 1,        //!< wait()'s timeout expired. The Fence condition is not satisfied.
-};
-
-/**
- * Status codes for sync objects
- */
-enum class SyncStatus : int8_t {
-    ERROR = -1,          //!< An error occurred. The Sync is not signaled.
-    SIGNALED = 0,        //!< The Sync is signaled.
-    NOT_SIGNALED = 1,    //!< The Sync is not signaled yet
 };
 
 static constexpr uint64_t FENCE_WAIT_FOR_EVER = uint64_t(-1);
@@ -693,7 +775,8 @@ enum class TextureUsage : uint16_t {
     BLIT_SRC            = 0x0040,            //!< Texture can be used the source of a blit()
     BLIT_DST            = 0x0080,            //!< Texture can be used the destination of a blit()
     PROTECTED           = 0x0100,            //!< Texture can be used for protected content
-    DEFAULT             = UPLOADABLE | SAMPLEABLE   //!< Default texture usage
+    DEFAULT             = UPLOADABLE | SAMPLEABLE,   //!< Default texture usage
+    ALL_ATTACHMENTS     = COLOR_ATTACHMENT | DEPTH_ATTACHMENT | STENCIL_ATTACHMENT | SUBPASS_INPUT,   //!< Mask of all attachments
 };
 
 //! Texture swizzle
@@ -729,6 +812,33 @@ static constexpr bool isStencilFormat(TextureFormat format) noexcept {
         default:
             return false;
     }
+}
+
+inline constexpr bool isColorFormat(TextureFormat format) noexcept {
+    switch (format) {
+        // Standard color formats
+        case TextureFormat::R8:
+        case TextureFormat::RG8:
+        case TextureFormat::RGBA8:
+        case TextureFormat::R16F:
+        case TextureFormat::RG16F:
+        case TextureFormat::RGBA16F:
+        case TextureFormat::R32F:
+        case TextureFormat::RG32F:
+        case TextureFormat::RGBA32F:
+        case TextureFormat::RGB10_A2:
+        case TextureFormat::R11F_G11F_B10F:
+        case TextureFormat::SRGB8:
+        case TextureFormat::SRGB8_A8:
+        case TextureFormat::RGB8:
+        case TextureFormat::RGB565:
+        case TextureFormat::RGB5_A1:
+        case TextureFormat::RGBA4:
+            return true;
+        default:
+            break;
+    }
+    return false;
 }
 
 static constexpr bool isUnsignedIntFormat(TextureFormat format) {
@@ -862,8 +972,28 @@ enum class SamplerCompareFunc : uint8_t {
     N           //!< Never. The depth / stencil test always fails.
 };
 
+//! this API is copied from (and only applies to) the Vulkan spec.
+//! These specify YUV to RGB conversions.
+enum class SamplerYcbcrModelConversion : uint8_t {
+    RGB_IDENTITY = 0,
+    YCBCR_IDENTITY = 1,
+    YCBCR_709 = 2,
+    YCBCR_601 = 3,
+    YCBCR_2020 = 4,
+};
+
+enum class SamplerYcbcrRange : uint8_t {
+    ITU_FULL = 0,
+    ITU_NARROW = 1,
+};
+
+enum class ChromaLocation : uint8_t {
+    COSITED_EVEN = 0,
+    MIDPOINT = 1,
+};
+
 //! Sampler parameters
-struct SamplerParams { // NOLINT
+struct SamplerParams {             // NOLINT
     SamplerMagFilter filterMag      : 1;    //!< magnification filter (NEAREST)
     SamplerMinFilter filterMin      : 3;    //!< minification filter  (NEAREST)
     SamplerWrapMode wrapS           : 2;    //!< s-coordinate wrap mode (CLAMP_TO_EDGE)
@@ -887,6 +1017,9 @@ struct SamplerParams { // NOLINT
 
     struct EqualTo {
         bool operator()(SamplerParams lhs, SamplerParams rhs) const noexcept {
+            assert_invariant(lhs.padding0 == 0);
+            assert_invariant(lhs.padding1 == 0);
+            assert_invariant(lhs.padding2 == 0);
             auto* pLhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&lhs));
             auto* pRhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&rhs));
             return *pLhs == *pRhs;
@@ -895,6 +1028,9 @@ struct SamplerParams { // NOLINT
 
     struct LessThan {
         bool operator()(SamplerParams lhs, SamplerParams rhs) const noexcept {
+            assert_invariant(lhs.padding0 == 0);
+            assert_invariant(lhs.padding1 == 0);
+            assert_invariant(lhs.padding2 == 0);
             auto* pLhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&lhs));
             auto* pRhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&rhs));
             return *pLhs == *pRhs;
@@ -902,16 +1038,112 @@ struct SamplerParams { // NOLINT
     };
 
 private:
+    friend inline bool operator == (SamplerParams lhs, SamplerParams rhs) noexcept {
+        return SamplerParams::EqualTo{}(lhs, rhs);
+    }
+    friend inline bool operator != (SamplerParams lhs, SamplerParams rhs) noexcept {
+        return  !SamplerParams::EqualTo{}(lhs, rhs);
+    }
     friend inline bool operator < (SamplerParams lhs, SamplerParams rhs) noexcept {
         return SamplerParams::LessThan{}(lhs, rhs);
     }
 };
+
 static_assert(sizeof(SamplerParams) == 4);
 
 // The limitation to 64-bits max comes from how we store a SamplerParams in our JNI code
 // see android/.../TextureSampler.cpp
 static_assert(sizeof(SamplerParams) <= sizeof(uint64_t),
         "SamplerParams must be no more than 64 bits");
+
+//! Sampler parameters
+struct SamplerYcbcrConversion {// NOLINT
+    SamplerYcbcrModelConversion ycbcrModel : 4;
+    TextureSwizzle r : 4;
+    TextureSwizzle g : 4;
+    TextureSwizzle b : 4;
+    TextureSwizzle a : 4;
+    SamplerYcbcrRange ycbcrRange : 1;
+    ChromaLocation xChromaOffset : 1;
+    ChromaLocation yChromaOffset : 1;
+    SamplerMagFilter chromaFilter : 1;
+    uint8_t padding;
+
+    struct Hasher {
+        size_t operator()(const SamplerYcbcrConversion p) const noexcept {
+            // we don't use std::hash<> here, so we don't have to include <functional>
+            return *reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&p));
+        }
+    };
+
+    struct EqualTo {
+        bool operator()(SamplerYcbcrConversion lhs, SamplerYcbcrConversion rhs) const noexcept {
+            assert_invariant(lhs.padding == 0);
+            auto* pLhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&lhs));
+            auto* pRhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&rhs));
+            return *pLhs == *pRhs;
+        }
+    };
+
+    struct LessThan {
+        bool operator()(SamplerYcbcrConversion lhs, SamplerYcbcrConversion rhs) const noexcept {
+            assert_invariant(lhs.padding == 0);
+            auto* pLhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&lhs));
+            auto* pRhs = reinterpret_cast<uint32_t const*>(reinterpret_cast<char const*>(&rhs));
+            return *pLhs < *pRhs;
+        }
+    };
+
+private:
+    friend inline bool operator == (SamplerYcbcrConversion lhs, SamplerYcbcrConversion rhs)
+            noexcept {
+        return SamplerYcbcrConversion::EqualTo{}(lhs, rhs);
+    }
+    friend inline bool operator != (SamplerYcbcrConversion lhs, SamplerYcbcrConversion rhs)
+            noexcept {
+        return  !SamplerYcbcrConversion::EqualTo{}(lhs, rhs);
+    }
+    friend inline bool operator < (SamplerYcbcrConversion lhs, SamplerYcbcrConversion rhs)
+            noexcept {
+        return SamplerYcbcrConversion::LessThan{}(lhs, rhs);
+    }
+};
+
+static_assert(sizeof(SamplerYcbcrConversion) == 4);
+
+static_assert(sizeof(SamplerYcbcrConversion) <= sizeof(uint64_t),
+        "SamplerYcbcrConversion must be no more than 64 bits");
+
+struct ExternalSamplerDatum {
+    ExternalSamplerDatum(SamplerYcbcrConversion ycbcr, SamplerParams spm, uint32_t extFmt)
+        : YcbcrConversion(ycbcr),
+          samplerParams(spm),
+          externalFormat(extFmt) {}
+    bool operator==(ExternalSamplerDatum const& rhs) const {
+        return (YcbcrConversion == rhs.YcbcrConversion && samplerParams == rhs.samplerParams &&
+                externalFormat == rhs.externalFormat);
+    }
+    struct EqualTo {
+        bool operator()(const ExternalSamplerDatum& lhs,
+                const ExternalSamplerDatum& rhs) const noexcept {
+            return (lhs.YcbcrConversion == rhs.YcbcrConversion &&
+                lhs.samplerParams == rhs.samplerParams &&
+                lhs.externalFormat == rhs.externalFormat);
+        }
+    };
+    SamplerYcbcrConversion YcbcrConversion;
+    SamplerParams samplerParams;
+    uint32_t externalFormat;
+};
+// No implicit padding allowed due to it being a hash key.
+static_assert(sizeof(ExternalSamplerDatum) == 12);
+
+struct DescriptorSetLayout {
+    utils::FixedCapacityVector<DescriptorSetLayoutBinding> bindings;
+
+//  TODO: uncomment when needed
+//    utils::FixedCapacityVector<ExternalSamplerDatum> externalSamplerData;
+};
 
 //! blending equation function
 enum class BlendEquation : uint8_t {
@@ -1058,7 +1290,7 @@ struct RasterState {
             bool inverseFrontFaces                      : 1;        // 31
 
             //! padding, must be 0
-            uint8_t padding                             : 1;        // 32
+            bool depthClamp                             : 1;        // 32
         };
         uint32_t u = 0;
     };
@@ -1068,32 +1300,6 @@ struct RasterState {
  **********************************************************************************************
  * \privatesection
  */
-
-enum class ShaderStage : uint8_t {
-    VERTEX = 0,
-    FRAGMENT = 1,
-    COMPUTE = 2
-};
-
-static constexpr size_t PIPELINE_STAGE_COUNT = 2;
-enum class ShaderStageFlags : uint8_t {
-    NONE        =    0,
-    VERTEX      =    0x1,
-    FRAGMENT    =    0x2,
-    COMPUTE     =    0x4,
-    ALL_SHADER_STAGE_FLAGS = VERTEX | FRAGMENT | COMPUTE
-};
-
-static inline constexpr bool hasShaderType(ShaderStageFlags flags, ShaderStage type) noexcept {
-    switch (type) {
-        case ShaderStage::VERTEX:
-            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::VERTEX));
-        case ShaderStage::FRAGMENT:
-            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::FRAGMENT));
-        case ShaderStage::COMPUTE:
-            return bool(uint8_t(flags) & uint8_t(ShaderStageFlags::COMPUTE));
-    }
-}
 
 /**
  * Selects which buffers to clear at the beginning of the render pass, as well as which buffers
@@ -1243,8 +1449,8 @@ enum class Workaround : uint16_t {
     // for some uniform arrays, it's needed to do an initialization to avoid crash on adreno gpu
     ADRENO_UNIFORM_ARRAY_CRASH,
     // Workaround a Metal pipeline compilation error with the message:
-    // "Could not statically determine the target of a texture". See light_indirect.fs
-    A8X_STATIC_TEXTURE_TARGET_ERROR,
+    // "Could not statically determine the target of a texture". See surface_light_indirect.fs
+    METAL_STATIC_TEXTURE_TARGET_ERROR,
     // Adreno drivers sometimes aren't able to blit into a layer of a texture array.
     DISABLE_BLIT_INTO_TEXTURE_ARRAY,
     // Multiple workarounds needed for PowerVR GPUs
@@ -1258,6 +1464,8 @@ using StereoscopicType = backend::Platform::StereoscopicType;
 template<> struct utils::EnableBitMaskOperators<filament::backend::ShaderStageFlags>
         : public std::true_type {};
 template<> struct utils::EnableBitMaskOperators<filament::backend::TargetBufferFlags>
+        : public std::true_type {};
+template<> struct utils::EnableBitMaskOperators<filament::backend::DescriptorFlags>
         : public std::true_type {};
 template<> struct utils::EnableBitMaskOperators<filament::backend::TextureUsage>
         : public std::true_type {};
@@ -1291,12 +1499,16 @@ utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::Textu
 utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::TextureUsage usage);
 utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::BufferObjectBinding binding);
 utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::TextureSwizzle swizzle);
+utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::ShaderStage shaderStage);
+utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::ShaderStageFlags stageFlags);
+utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::CompilerPriorityQueue compilerPriorityQueue);
+utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::PushConstantVariant pushConstantVariant);
 utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::AttributeArray& type);
+utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::DescriptorSetLayout& dsl);
 utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::PolygonOffset& po);
 utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::RasterState& rs);
 utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::RenderPassParams& b);
 utils::io::ostream& operator<<(utils::io::ostream& out, const filament::backend::Viewport& v);
-utils::io::ostream& operator<<(utils::io::ostream& out, filament::backend::ShaderStageFlags stageFlags);
 #endif
 
 #endif // TNT_FILAMENT_BACKEND_DRIVERENUMS_H
